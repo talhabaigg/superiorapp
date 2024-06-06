@@ -6,11 +6,23 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
+import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
 
 const showingNavigationDropdown = ref(false);
+
+const links = [
+    { href: '/account-settings', label: 'Account settings' },
+    { href: '/support', label: 'Support' },
+    { href: '/license', label: 'License' },
+    { href: '/sign-out', label: 'Sign out' },
+  ]
+
+
+
 </script>
 
 <template>
+    
     <div>
         <div class="min-h-screen bg-gray-100">
             <nav class="bg-gray-900 lg:bg-white border-b border-gray-100">
@@ -101,49 +113,112 @@ const showingNavigationDropdown = ref(false);
                                 </Dropdown>
                             </div>
                         </div>
-
+                        
                         <!-- Hamburger -->
-                        <div class="-me-2 flex items-center ">
+                        <!-- <div class="-me-2 flex items-center ">
                             <button
                                 @click="showingNavigationDropdown = !showingNavigationDropdown"
                                 class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                            >Put Profile Picture
+                            >C
                                 
                             </button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Responsive Navigation Menu -->
-                <div
-                    :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }"
-                    class="sm:hidden"
-                >
-                    <div class="pt-2 pb-3 space-y-1">
-                        <ResponsiveNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                            Dashboard
-                        </ResponsiveNavLink>
-                    </div>
-
-                    <!-- Responsive Settings Options -->
-                    <div class="pt-4 pb-1 border-t border-gray-200">
-                        <div class="px-4">
-                            <div class="font-medium text-base text-gray-800">
-                                {{ $page.props.auth.user.name }}
+                        </div> -->
+                        <Menu as="div" class="h-8 w-8 p-3  rounded-full relative inline-block text-left">
+                            <div>
+                                <MenuButton
+                                class="inline-flex w-full bg-gray-700 rounded-full justify-center bg-black/20 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+                                >
+                                TB
+                                <ChevronDownIcon
+                                    class="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
+                                    aria-hidden="true"
+                                />
+                                </MenuButton>
                             </div>
-                            <div class="font-medium text-sm text-gray-500">{{ $page.props.auth.user.email }}</div>
-                        </div>
 
-                        <div class="mt-3 space-y-1">
-                            <ResponsiveNavLink :href="route('profile.edit')"> Profile </ResponsiveNavLink>
-                            <ResponsiveNavLink :href="route('logout')" method="post" as="button">
-                                Log Out
-                            </ResponsiveNavLink>
+                        <transition
+                            enter-active-class="transition duration-100 ease-out"
+                            enter-from-class="transform scale-95 opacity-0"
+                            enter-to-class="transform scale-100 opacity-100"
+                            leave-active-class="transition duration-75 ease-in"
+                            leave-from-class="transform scale-100 opacity-100"
+                            leave-to-class="transform scale-95 opacity-0"
+                        >
+                            <MenuItems
+                            class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                            >
+                            <div class="px-1 py-1">
+                                <MenuItem v-slot="{ active }">
+                                <Link :href="route('profile.edit')"> 
+                                    <button
+                                    :class="[
+                                    active ? 'bg-gray-100 text-gray-700' : 'text-gray-900',
+                                    'group flex w-full items-center px-4 py-2 text-sm',
+                                    ]"
+                                >
+                                    Profile
+                                </button>
+                                </Link>
+                                </MenuItem>
+                                <MenuItem v-slot="{ active }">
+                                    <Link :href="route('profile.edit')"> <button
+                                    :class="[
+                                    active ? 'bg-gray-100 text-gray-700' : 'text-gray-900',
+                                    'group flex w-full items-center px-4 py-2 text-sm',
+                                    ]"
+                                >
+                                    Upload photo
+                                </button>
+                                    </Link>
+                                </MenuItem>
+
+                                <MenuItem v-slot="{ active }">
+                                    <Link :href="route('logout')" method="post" > <button
+                                    :class="[
+                                    active ? 'bg-gray-100 text-gray-700' : 'text-gray-900',
+                                    'group flex w-full items-center px-4 py-2 text-sm',
+                                    ]"
+                                >
+                                    Sign out
+                                </button>
+                                    </Link>
+                                </MenuItem>
+                                
+                            </div>
+                            
+
+                            </MenuItems>
+                        </transition>
+                        </Menu>
+                                            
+                    </div>
+                </div>
+
+                <!-- Drop Down Menu -->
+                
+               
+                
+            </nav>
+            <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="absolute right-5 mt-2 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                    <div class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
+                        <li>
+                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
+                        </li>
+                        <li>
+                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
+                        </li>
+                        </ul>
+                        <div class="py-2">
+                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
                         </div>
                     </div>
                 </div>
-            </nav>
-
+           
+            
             <!-- Page Heading -->
             <header class="bg-white shadow" v-if="$slots.header">
                 <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
@@ -153,6 +228,7 @@ const showingNavigationDropdown = ref(false);
 
             <!-- Page Content -->
             <main>
+                
                 <slot />
             </main>
         </div>
