@@ -1,22 +1,11 @@
 <script setup>
-import { ref } from 'vue';
+
 import ApplicationLogo from '@/Components/ApplicationLogo.vue';
 import Dropdown from '@/Components/Dropdown.vue';
 import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
-import ResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/vue3';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
-
-const showingNavigationDropdown = ref(false);
-
-const links = [
-    { href: '/account-settings', label: 'Account settings' },
-    { href: '/support', label: 'Support' },
-    { href: '/license', label: 'License' },
-    { href: '/sign-out', label: 'Sign out' },
-  ]
-
 
 
 </script>
@@ -114,16 +103,9 @@ const links = [
                             </div>
                         </div>
                         
-                        <!-- Hamburger -->
-                        <!-- <div class="-me-2 flex items-center ">
-                            <button
-                                @click="showingNavigationDropdown = !showingNavigationDropdown"
-                                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out"
-                            >C
-                                
-                            </button>
-                        </div> -->
-                        <Menu as="div" class="h-8 w-8 p-3  rounded-full relative inline-block text-left">
+                        <!-- Menu Drop Down on header - responsive -->
+                       
+                        <Menu as="div" class="h-8 w-8 p-3  rounded-full relative inline-block lg:hidden text-left">
                             <div>
                                 <MenuButton
                                 class="inline-flex w-full bg-gray-700 rounded-full justify-center bg-black/20 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
@@ -192,31 +174,10 @@ const links = [
                         </Menu>
                                             
                     </div>
-                </div>
-
-                <!-- Drop Down Menu -->
-                
-               
+                </div> 
                 
             </nav>
-            <div :class="{ block: showingNavigationDropdown, hidden: !showingNavigationDropdown }" class="absolute right-5 mt-2 z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                    <div class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
-                        <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
-                        <li>
-                            <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                        </li>
-                        <li>
-                            <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                        </li>
-                        </ul>
-                        <div class="py-2">
-                        <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white">Separated link</a>
-                        </div>
-                    </div>
-                </div>
+            
            
             
             <!-- Page Heading -->
@@ -228,7 +189,6 @@ const links = [
 
             <!-- Page Content -->
             <main>
-                
                 <slot />
             </main>
         </div>
