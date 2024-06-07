@@ -17,7 +17,7 @@
     </div>
   </header>
   <div class="p-2">
-  <div class="mt-2 relative overflow-x-auto mx-auto max-w-6xl rounded-lg  sm:block ">
+  <div class="mt-2 relative overflow-x-auto mx-auto max-w-6xl rounded-lg  sm:block overflow-y-hidden">
 
     <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 ">
       <thead class="bg-gray-300">

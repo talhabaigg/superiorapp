@@ -15,7 +15,8 @@ class AvatarHelper
             [100, 181, 246], [77, 208, 225], [77, 182, 172], [129, 199, 132],
             [220, 231, 117], [255, 213, 79], [255, 183, 77], [161, 136, 127]
         ];
-        $backgroundColor = $colors[array_rand($colors)];
+        // $backgroundColor = $colors[array_rand($colors)];
+        $backgroundColor = [255, 183, 77];
 
         $imgWidth = 100;
         $imgHeight = 100;
