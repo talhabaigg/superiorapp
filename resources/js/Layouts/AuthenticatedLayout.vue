@@ -105,16 +105,17 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
                         
                         <!-- Menu Drop Down on header - responsive -->
                        
-                        <Menu as="div" class="h-8 w-8 p-3  rounded-full relative inline-block lg:hidden text-left">
+                        <Menu as="div" class=" p-3 mt-1 relative inline-block lg:hidden text-left">
                             <div>
-                                <MenuButton
-                                class="inline-flex w-full bg-gray-700 rounded-full justify-center bg-black/20 px-4 py-2 text-sm font-medium text-gray-200 hover:bg-black/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/75"
+                                <MenuButton class="h-8 w-8 rounded-full"
+                               
                                 >
-                                TB
-                                <ChevronDownIcon
-                                    class="-mr-1 ml-2 h-5 w-5 text-violet-200 hover:text-violet-100"
-                                    aria-hidden="true"
-                                />
+                                <img
+        :src="'avatars/66624e7143304.png'"
+        alt="Avatar"
+       class="h-8 w-8 rounded-full"
+      />
+                                
                                 </MenuButton>
                             </div>
 
@@ -128,7 +129,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
                         >
                             <MenuItems
                             class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
-                            >
+                            style="z-index: 9999;" >
                             <div class="px-1 py-1">
                                 <MenuItem v-slot="{ active }">
                                 <Link :href="route('profile.edit')"> 
