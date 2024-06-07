@@ -105,17 +105,14 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
                         
                         <!-- Menu Drop Down on header - responsive -->
                        
-                        <Menu as="div" class=" p-3 mt-1 relative inline-block lg:hidden text-left">
+                        <Menu as="div" class=" p-3 mt-1 relative inline-block lg:hidden text-left ">
                             <div>
-                                <MenuButton class="h-8 w-8 rounded-full"
-                               
-                                >
+                                <MenuButton class="flex max-w-xs items-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                 <img
-        :src="'avatars/66624e7143304.png'"
-        alt="Avatar"
-       class="h-8 w-8 rounded-full"
-      />
-                                
+                                        :src="$page.props.auth.user.avatar"
+                                        alt="Avatar"
+                                    class="h-8 w-8 rounded-full "
+                                    />
                                 </MenuButton>
                             </div>
 
