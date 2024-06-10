@@ -25,5 +25,12 @@ class Project extends Model
         'daily_qr_code',
     ];
 
+    // Define a method to toggle the status
+    public function toggleStatus()
+    {
+        $this->is_active = !$this->is_active;
+        $this->save();
+    }
+
    
 }

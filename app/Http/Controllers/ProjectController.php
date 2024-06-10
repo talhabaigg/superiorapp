@@ -84,5 +84,13 @@ class ProjectController extends Controller
     {
         //
     }
+
+    public function toggleStatus($id)
+    {
+        $project = Project::findOrFail($id);
+        $project->toggleStatus();
+
+        return redirect()->route('project.index')->with('success', 'Project is now inactive.!');
+    }
     
 }
