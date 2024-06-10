@@ -37,7 +37,7 @@
                   <option value="0">Inactive</option>
               </select>
               <div>
-                <button @click="resetFields" class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base text-gray-500 hover:text-gray-700 focus:text-blue-500  sm:text-sm">
+                <button @click="resetFields" class="hidden sm:block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base text-gray-500 hover:text-gray-700 focus:text-blue-500  sm:text-sm">
                   Reset
                 </button>
               </div>
@@ -54,7 +54,7 @@
                       </tr>
                   </thead>
                   <tbody class="divide-y divide-gray-200 bg-white">
-                      <tr v-for="project in filteredProjects" :key="project.id">
+                      <tr v-for="project in paginatedProjects" :key="project.id">
                           <td class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap">
                               <PrimaryBadge v-if="project.is_active"> Active </PrimaryBadge>
                               <GrayBadge v-else> Inactive </GrayBadge>
@@ -126,7 +126,17 @@
                       </tr>
                   </tbody>
               </table>
+              
           </div>
+          <div class="mt-4 flex justify-between items-center max-w-6xl mx-auto">
+                <button @click="prevPage" :disabled="currentPage === 1" class="relative inline-flex items-center border  px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500  rounded-l-md disabled:opacity-50">
+          Previous
+        </button>
+        <span class="text-sm text-gray-700 m-2">Page {{ currentPage }} of {{ totalPages }}</span>
+        <button @click="nextPage" :disabled="currentPage === totalPages" class="relative inline-flex items-center border  px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md">
+          Next
+        </button>
+        </div>
       </div>
   </AuthenticatedLayout>
 </template>
@@ -151,6 +161,11 @@ const searchQuery = ref('');
 const selectedSubsidiaryType = ref('');
 const selectedStatusType = ref(''); // Ensure it's an empty string for default
 
+  // Reactive state for pagination
+  const currentPage = ref(1);
+  const itemsPerPage = ref(9);
+
+
 // Computed property to filter projects based on search query and selected filter types
 const filteredProjects = computed(() => {
   return props.projects.filter(project => {
@@ -166,6 +181,38 @@ const resetFields = () => {
   selectedStatusType.value = '';
   searchQuery.value = '';
     };
+
+    const getProjects = (url) => {
+            Inertia.visit(url, {
+                only: ['projects'],
+                preserveState: true,
+            });
+        };
+
+// Computed property for paginated users
+const paginatedProjects = computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    return filteredProjects.value.slice(start, end);
+  });
+  
+  // Computed property for total pages
+  const totalPages = computed(() => {
+    return Math.ceil(filteredProjects.value.length / itemsPerPage.value);
+  });
+  
+  // Methods for pagination
+  const prevPage = () => {
+    if (currentPage.value > 1) {
+      currentPage.value--;
+    }
+  };
+  
+  const nextPage = () => {
+    if (currentPage.value < totalPages.value) {
+      currentPage.value++;
+    }
+  };
 const dropDownLinks = [
   { name: 'QR login scanner', icon: 'mdi:folder-outline', route: 'project' },
   { name: 'QR Cards PDF', icon: 'mdi:folder-outline', route: 'swms' },
