@@ -6,17 +6,16 @@ class AvatarHelper
 {
     public static function generateAvatar($name)
     {
-        $initials = collect(explode(' ', $name))->map(function ($part) {
-            return strtoupper($part[0]);
-        })->join('');
+        // Split the name into parts and take the first two words
+        $nameParts = explode(' ', $name);
+        $initials = strtoupper($nameParts[0][0]) . (isset($nameParts[1]) ? strtoupper($nameParts[1][0]) : '');
 
         $colors = [
             [229, 115, 115], [240, 98, 146], [186, 104, 200], [149, 117, 205],
             [100, 181, 246], [77, 208, 225], [77, 182, 172], [129, 199, 132],
             [220, 231, 117], [255, 213, 79], [255, 183, 77], [161, 136, 127]
         ];
-        // $backgroundColor = $colors[array_rand($colors)];
-        $backgroundColor = [255, 183, 77];
+        $backgroundColor = $colors[array_rand($colors)];
 
         $imgWidth = 100;
         $imgHeight = 100;

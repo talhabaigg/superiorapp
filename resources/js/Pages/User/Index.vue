@@ -31,8 +31,9 @@
           class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
         >
           <option value="">All Employee Types</option>
-          <option value="Plasterer">Plasterer</option>
-          <option value="Leading Hand">Leading Hand</option>
+          <option v-for="type in employeeTypes" :key="type" :value="type">
+            {{ type }}
+          </option>
         </select>
         <select
           v-model="selectedSubsidiaryType"
@@ -208,6 +209,11 @@ const selectedStatusType = ref("1");
 const currentPage = ref(1);
 const itemsPerPage = ref(9);
 
+const getUniqueEmployeeTypes = (users) => {
+  const employeeTypes = users.map((user) => user.employee_type);
+  return [...new Set(employeeTypes)];
+};
+const employeeTypes = ref(getUniqueEmployeeTypes(props.users));
 // Computed property to filter users based on search query and selected employee type
 const filteredUsers = computed(() => {
   return props.users.filter((user) => {

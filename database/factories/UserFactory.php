@@ -35,8 +35,8 @@ class UserFactory extends Factory
             'remember_token' => Str::random(10),
             'avatar' =>  $avatarPath,
             'employee_type' => $this->faker->randomElement(['Foreman', 'Plasterer', 'Leading Hand']),
-            'superior_id' => 'SUP' . Str::random(3),
-            'greenline_id' => 'GRE' . Str::random(3),
+            'superior_id' => 'SUP' . random_int(100, 999),
+            'greenline_id' => 'GRE' . random_int(100, 999),
         ];
     }
 
