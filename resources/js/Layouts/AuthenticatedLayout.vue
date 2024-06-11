@@ -6,8 +6,16 @@ import DropdownLink from '@/Components/DropdownLink.vue';
 import NavLink from '@/Components/NavLink.vue';
 import { Link } from '@inertiajs/vue3';
 import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
+import { usePage } from '@inertiajs/vue3';
+const page = usePage();
+
+const getAvatarUrl = (avatarPath) => {
+  if (!avatarPath) return '';
+  return `${window.location.origin}/${avatarPath}`;
+}
 
 
+console.log(getAvatarUrl);
 </script>
 
 <template>
@@ -75,7 +83,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
                                                 type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
                                             >
-                                                {{ $page.props.auth.user.name }}
+                                                {{ ($page.props.auth.user.name) }}
 
                                                 <svg
                                                     class="ms-2 -me-0.5 h-4 w-4"
@@ -109,7 +117,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue';
                             <div>
                                 <MenuButton class="flex max-w-xs items-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
                                 <img
-                                        :src="$page.props.auth.user.avatar"
+                                        :src="getAvatarUrl($page.props.auth.user.avatar)"
                                         alt="Avatar"
                                     class="h-8 w-8 rounded-full "
                                     />

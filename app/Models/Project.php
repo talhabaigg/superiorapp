@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Swms;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -32,5 +33,9 @@ class Project extends Model
         $this->save();
     }
 
+    public function users()
+    {
+        return $this->belongsToMany(User::class);
+    }
    
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Inertia\Inertia;
 use App\Models\Project;
 use Illuminate\Http\Request;
 
@@ -56,9 +57,13 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Project $project)
     {
-        //
+        return inertia('Project/Show', 
+       [
+        'project' => $project
+       ]
+    );
     }
 
     /**
