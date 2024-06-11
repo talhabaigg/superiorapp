@@ -125,7 +125,7 @@
                       Labour used
                     </dt>
                     <dd class="text-md mt-1 text-gray-900">
-                      <div class="mb-1 text-base text-sm dark:text-white">
+                      <div class="mb-1 text-sm dark:text-white">
                         283,027 of 183,360 hours used
                       </div>
                       <div
@@ -290,8 +290,7 @@
                 <ul role="list" class="space-y-4">
                   <li>
                     <div class="flex">
-                      <span
-                        class="flex hidden -space-x-1 overflow-hidden xl:inline"
+                      <span class="flex -space-x-1 overflow-hidden xl:inline"
                         ><a
                           class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
                           href="https://app.superiorgroup.com.au/users/137"
@@ -330,7 +329,7 @@
                               class="rounded-full" /></span></a></span
                       ><span
                         ><a
-                          class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden xl:block"
+                          class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden xl:block"
                           href="https://app.superiorgroup.com.au/project-members/943ca432-9a3d-42dc-93e1-b30dc2d0ab5f"
                         >
                           Show all - 4</a

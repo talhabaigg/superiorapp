@@ -50,4 +50,10 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Project::class);
     }
+
+    public function toggleStatus()
+    {
+        $this->is_active = !$this->is_active;
+        $this->save();
+    }
 }

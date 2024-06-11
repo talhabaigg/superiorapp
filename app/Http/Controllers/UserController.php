@@ -66,4 +66,12 @@ class UserController extends Controller
     {
         //
     }
+
+    public function toggleStatus($id)
+    {
+        $user = User::findOrFail($id);
+        $user->toggleStatus();
+
+        return redirect()->route('users.index')->with('success', 'Employee is now inactive.!');
+    }
 }
