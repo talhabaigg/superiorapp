@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\ProjectUserController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -27,6 +28,12 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('project', ProjectController::class);
     Route::resource('users', UserController::class);
+
+    // Route::get('/project/{project}/users', [ProjectUserController::class, 'index'])->name('project-users.index');
+    Route::post('/projects/{project}/users', [ProjectUserController::class, 'store'])->name('project-users.store');
+    Route::delete('/projects/{project}/users/{user}', [ProjectUserController::class, 'destroy'])->name('project-users.destroy');
+    
+    Route::get('/project-members/{project}', [ProjectUserController::class, 'index'])->name('project-users.index');
 });
 
 require __DIR__.'/auth.php';
