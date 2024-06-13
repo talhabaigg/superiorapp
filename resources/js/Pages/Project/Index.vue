@@ -125,29 +125,25 @@
                   ></div>
                 </div>
               </td>
-              <td class="hidden sm:table-cell">
+              <td
+                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
+              >
                 <div class="flex items-center space-x-2">
-                  <div
-                    class="avatar bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                  >
-                    RG
+                  <div class="flex -space-x-2">
+                    <div
+                      v-for="user in project.users.slice(0, 5)"
+                      :key="user.id"
+                    >
+                      <img
+                        :src="getAvatarUrl(user.avatar)"
+                        alt="Avatar"
+                        class="h-8 w-8 rounded-full border-2 border-white"
+                      />
+                    </div>
                   </div>
-                  <div
-                    class="avatar bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                  >
-                    CG
+                  <div v-if="project.users.length > 4" class="">
+                    <GrayBadge>SHOW ALL - {{ project.users.length }}</GrayBadge>
                   </div>
-                  <div
-                    class="avatar bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                  >
-                    SG
-                  </div>
-                  <div
-                    class="avatar bg-red-500 text-white rounded-full w-8 h-8 flex items-center justify-center"
-                  >
-                    LO
-                  </div>
-                  <div class="text-sm text-gray-500">Show all</div>
                 </div>
               </td>
               <td class="relative">
@@ -246,6 +242,11 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 const props = defineProps({
   projects: Array,
 });
+
+const getAvatarUrl = (avatarPath) => {
+  if (!avatarPath) return "";
+  return `${window.location.origin}/${avatarPath}`;
+};
 
 // Reactive state for search and filter
 const searchQuery = ref("");

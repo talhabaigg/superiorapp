@@ -36,23 +36,24 @@
               >
                 Employee type
               </th>
-              <th
-                scope="col"
-                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
-              >
-                Superior ID
-              </th>
-              <th
-                scope="col"
-                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
-              >
-                Greenline ID
-              </th>
+
               <th
                 scope="col"
                 class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
               >
                 Email
+              </th>
+              <th
+                scope="col"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+              >
+                Mobile
+              </th>
+              <th
+                scope="col"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+              >
+                Travel zone
               </th>
             </tr>
           </thead>
@@ -62,7 +63,7 @@
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
                 <img
-                  :src="getAvatarUrl($page.props.auth.user.avatar)"
+                  :src="getAvatarUrl(user.avatar)"
                   alt="Avatar"
                   class="h-8 w-8 rounded-full"
                 />
@@ -90,21 +91,22 @@
               >
                 {{ user.employee_type }}
               </td>
-              <td class="hidden sm:table-cell">
-                <div
-                  class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
-                >
-                  {{ user.superior_id }}
-                </div>
-              </td>
-              <td
-                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
-              >
-                {{ user.greenline_id }}
-              </td>
+
               <td>
                 <div class="text-blue-600 hover:text-blue-900">
                   {{ user.email }}
+                </div>
+              </td>
+              <td>
+                <div class="text-blue-600 hover:text-blue-900">
+                  {{ user.phone_number }}
+                </div>
+              </td>
+              <td>
+                <div
+                  class="px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
+                >
+                  No travel zone set
                 </div>
               </td>
             </tr>

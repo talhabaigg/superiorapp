@@ -37,12 +37,21 @@ class UserFactory extends Factory
             'employee_type' => $this->faker->randomElement(['Foreman', 'Plasterer', 'Leading Hand']),
             'superior_id' => 'SUP' . random_int(100, 999),
             'greenline_id' => 'GRE' . random_int(100, 999),
+            'phone_number' => $this->generateAustralianPhoneNumber(),
         ];
     }
 
     /**
      * Indicate that the model's email address should be unverified.
      */
+    private function generateAustralianPhoneNumber(): string
+    {
+        $areaCode = $this->faker->randomElement(['04']);
+        $subscriberNumber = $this->faker->numerify('#### ####');
+
+        return "$areaCode $subscriberNumber";
+    }
+
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [

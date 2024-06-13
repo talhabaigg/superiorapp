@@ -15,7 +15,7 @@ class ProjectController extends Controller
     {
         return inertia('Project/Index', 
        [
-        'projects' => Project::all()
+        'projects' => Project::with('users')->get(),
        ]
     );
     }
@@ -59,11 +59,11 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        return inertia('Project/Show', 
-       [
-        'project' => $project
-       ]
-    );
+        $project->load('users');
+
+    return inertia('Project/Show', [
+        'project' => $project,
+    ]);
     }
 
     /**

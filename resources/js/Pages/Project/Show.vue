@@ -214,62 +214,20 @@
               </div>
             </div>
             <div class="border-t border-gray-200 py-6 pl-4 pr-2 sm:pl-6">
-              <ul role="list" class="space-y-4">
-                <li>
-                  <div class="flex">
-                    <span class="flex -space-x-1 overflow-hidden xl:inline"
-                      ><a
-                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                        href="https://app.superiorgroup.com.au/users/137"
-                        ><span
-                          class="h-8 w-8 inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                          title="Ryan Gundry"
-                          ><img
-                            src="/storage/avatar-137.jpg"
-                            class="rounded-full" /></span></a
-                      ><a
-                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                        href="https://app.superiorgroup.com.au/users/15"
-                        ><span
-                          class="h-8 w-8 inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                          title="Corey Gill"
-                          ><img
-                            src="/storage/avatar-15.jpg"
-                            class="rounded-full" /></span></a
-                      ><a
-                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                        href="https://app.superiorgroup.com.au/users/124"
-                        ><span
-                          class="h-8 w-8 inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                          title="Steven Gow (Deleted user)"
-                          ><img
-                            src="/storage/avatar-124.jpg"
-                            class="rounded-full" /></span></a
-                      ><a
-                        class="inline-block h-8 w-8 rounded-full ring-2 ring-white"
-                        href="https://app.superiorgroup.com.au/users/261"
-                        ><span
-                          class="h-8 w-8 inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                          title="Lilli Oniper (Deleted user)"
-                          ><img
-                            src="/storage/avatar-261.jpg"
-                            class="rounded-full" /></span></a></span
-                    ><span
-                      ><a
-                        class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden xl:block"
-                        href="https://app.superiorgroup.com.au/project-members/943ca432-9a3d-42dc-93e1-b30dc2d0ab5f"
-                      >
-                        Show all - 4</a
-                      ><a
-                        class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto xl:hidden"
-                        href="https://app.superiorgroup.com.au/project-members/943ca432-9a3d-42dc-93e1-b30dc2d0ab5f"
-                      >
-                        View members - 4</a
-                      ></span
-                    >
+              <div class="flex items-center space-x-2">
+                <div class="flex -space-x-2">
+                  <div v-for="user in project.users.slice(0, 5)" :key="user.id">
+                    <img
+                      :src="getAvatarUrl(user.avatar)"
+                      alt="Avatar"
+                      class="h-8 w-8 rounded-full border-2 border-white"
+                    />
                   </div>
-                </li>
-              </ul>
+                </div>
+                <div v-if="project.users.length > 4" class="">
+                  <GrayBadge>SHOW ALL - {{ project.users.length }}</GrayBadge>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -285,6 +243,10 @@ import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
 const props = defineProps({
   project: Object,
 });
+const getAvatarUrl = (avatarPath) => {
+  if (!avatarPath) return "";
+  return `${window.location.origin}/${avatarPath}`;
+};
 
 const tabs = [
   { name: "Summary", routeName: "project.show" },
