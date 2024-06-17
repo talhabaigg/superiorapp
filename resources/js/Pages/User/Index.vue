@@ -108,7 +108,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="user in paginatedUsers" :key="user.id">
+            <tr v-for="user in filteredUsers" :key="user.id">
               <td
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
@@ -163,7 +163,13 @@
         </table>
       </div>
       <div class="flex justify-between items-center p-4 mx-auto max-w-7xl">
-        <button
+        <div
+          v-if="users.data.length"
+          class="w-full flex justify-center mt-8 mb-8"
+        >
+          <Pagination :links="users.links" />
+        </div>
+        <!-- <button
           @click="prevPage"
           :disabled="currentPage === 1"
           class="relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500 rounded-l-md disabled:opacity-50"
@@ -179,7 +185,7 @@
           class="relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md"
         >
           Next
-        </button>
+        </button> -->
       </div>
     </div>
   </AuthenticatedLayout>
@@ -188,14 +194,13 @@
   <script setup>
 import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
-
+import Pagination from "@/Components/Pagination.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 // Define props
 const props = defineProps({
   users: {
-    type: Array,
-    default: () => [],
+    type: Object,
   },
 });
 
@@ -210,13 +215,13 @@ const currentPage = ref(1);
 const itemsPerPage = ref(9);
 
 const getUniqueEmployeeTypes = (users) => {
-  const employeeTypes = users.map((user) => user.employee_type);
+  const employeeTypes = users.data.map((user) => user.employee_type);
   return [...new Set(employeeTypes)];
 };
 const employeeTypes = ref(getUniqueEmployeeTypes(props.users));
 // Computed property to filter users based on search query and selected employee type
 const filteredUsers = computed(() => {
-  return props.users.filter((user) => {
+  return props.users.data.filter((user) => {
     const matchesSearchQuery = user.name
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase());
@@ -231,29 +236,29 @@ const filteredUsers = computed(() => {
 });
 
 // Computed property for paginated users
-const paginatedUsers = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredUsers.value.slice(start, end);
-});
+// const paginatedUsers = computed(() => {
+//   const start = (currentPage.value - 1) * itemsPerPage.value;
+//   const end = start + itemsPerPage.value;
+//   return filteredUsers.value.slice(start, end);
+// });
 
-// Computed property for total pages
-const totalPages = computed(() => {
-  return Math.ceil(filteredUsers.value.length / itemsPerPage.value);
-});
+// // Computed property for total pages
+// const totalPages = computed(() => {
+//   return Math.ceil(filteredUsers.value.length / itemsPerPage.value);
+// });
 
-// Methods for pagination
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
+// // Methods for pagination
+// const prevPage = () => {
+//   if (currentPage.value > 1) {
+//     currentPage.value--;
+//   }
+// };
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
+// const nextPage = () => {
+//   if (currentPage.value < totalPages.value) {
+//     currentPage.value++;
+//   }
+// };
 
 const resetFields = () => {
   searchQuery.value = "";

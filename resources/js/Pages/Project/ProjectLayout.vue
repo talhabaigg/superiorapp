@@ -9,7 +9,10 @@
             </h1>
             <ul class="flex items-center space-x-4 overflow-hidden">
               <li>
-                <a class="text-gray-400 hover:text-gray-500">
+                <Link
+                  :href="route('project.index')"
+                  class="text-gray-400 hover:text-gray-500"
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -23,7 +26,7 @@
                       clip-rule="evenodd"
                     ></path>
                   </svg>
-                </a>
+                </Link>
               </li>
               <li>
                 <a class="text-gray-400 hover:text-gray-500">
@@ -43,10 +46,10 @@
                 </a>
               </li>
               <li>
-                <a
+                <Link
+                  :href="route('project.show', project.id)"
                   class="ml-2 whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-700"
-                  href="https://app.superiorgroup.com.au/projects/943ca432-9a3d-42dc-93e1-b30dc2d0ab5f"
-                  >{{ project.project_name }}</a
+                  >{{ project.project_name }}</Link
                 >
               </li>
             </ul>

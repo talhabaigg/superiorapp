@@ -12,13 +12,13 @@ class ProjectController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {
-        return inertia('Project/Index', 
-       [
-        'projects' => Project::with('users')->get(),
-       ]
-    );
-    }
+{
+    return Inertia::render('Project/Index', [
+        'projects' => Project::with('users')
+            ->orderByDesc('created_at')
+            ->paginate(10), // Adjust the number as needed
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.

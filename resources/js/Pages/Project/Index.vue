@@ -90,7 +90,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="project in paginatedProjects" :key="project.id">
+            <tr v-for="project in filteredProjects" :key="project.id">
               <td
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
@@ -129,7 +129,7 @@
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
                 <div class="flex items-center space-x-2">
-                  <div class="flex -space-x-2">
+                  <div class="hidden md:flex -space-x-2">
                     <div
                       v-for="user in project.users.slice(0, 5)"
                       :key="user.id"
@@ -142,7 +142,12 @@
                     </div>
                   </div>
                   <div v-if="project.users.length > 4" class="">
-                    <GrayBadge>SHOW ALL - {{ project.users.length }}</GrayBadge>
+                    <Link
+                      :href="route('project-users.index', project.id)"
+                      class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden sm:block"
+                    >
+                      SHOW ALL - {{ project.users.length }}
+                    </Link>
                   </div>
                 </div>
               </td>
@@ -206,23 +211,12 @@
         </table>
       </div>
       <div class="mt-4 flex justify-between items-center max-w-6xl mx-auto">
-        <button
-          @click="prevPage"
-          :disabled="currentPage === 1"
-          class="relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500 rounded-l-md disabled:opacity-50"
+        <div
+          v-if="projects.data.length"
+          class="w-full flex justify-end mt-8 mb-8"
         >
-          Previous
-        </button>
-        <span class="text-sm text-gray-700 m-2"
-          >Page {{ currentPage }} of {{ totalPages }}</span
-        >
-        <button
-          @click="nextPage"
-          :disabled="currentPage === totalPages"
-          class="relative inline-flex items-center border px-4 py-2 text-sm font-medium focus:z-20 border-gray-300 bg-white text-gray-500 hover:bg-gray-50 rounded-r-md"
-        >
-          Next
-        </button>
+          <Pagination :links="projects.links" />
+        </div>
       </div>
     </div>
   </AuthenticatedLayout>
@@ -237,10 +231,10 @@ import GrayBadge from "@/Components/GrayBadge.vue";
 import { ref, computed } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
-
+import Pagination from "@/Components/Pagination.vue";
 // Define props
 const props = defineProps({
-  projects: Array,
+  projects: Object,
 });
 
 const getAvatarUrl = (avatarPath) => {
@@ -259,7 +253,7 @@ const itemsPerPage = ref(9);
 
 // Computed property to filter projects based on search query and selected filter types
 const filteredProjects = computed(() => {
-  return props.projects.filter((project) => {
+  return props.projects.data.filter((project) => {
     const matchesSearchQuery = project.project_name
       .toLowerCase()
       .includes(searchQuery.value.toLowerCase());
@@ -286,30 +280,30 @@ const getProjects = (url) => {
   });
 };
 
-// Computed property for paginated users
-const paginatedProjects = computed(() => {
-  const start = (currentPage.value - 1) * itemsPerPage.value;
-  const end = start + itemsPerPage.value;
-  return filteredProjects.value.slice(start, end);
-});
+// // Computed property for paginated users
+// const paginatedProjects = computed(() => {
+//   const start = (currentPage.value - 1) * itemsPerPage.value;
+//   const end = start + itemsPerPage.value;
+//   return filteredProjects.value.slice(start, end);
+// });
 
-// Computed property for total pages
-const totalPages = computed(() => {
-  return Math.ceil(filteredProjects.value.length / itemsPerPage.value);
-});
+// // Computed property for total pages
+// const totalPages = computed(() => {
+//   return Math.ceil(filteredProjects.value.length / itemsPerPage.value);
+// });
 
-// Methods for pagination
-const prevPage = () => {
-  if (currentPage.value > 1) {
-    currentPage.value--;
-  }
-};
+// // Methods for pagination
+// const prevPage = () => {
+//   if (currentPage.value > 1) {
+//     currentPage.value--;
+//   }
+// };
 
-const nextPage = () => {
-  if (currentPage.value < totalPages.value) {
-    currentPage.value++;
-  }
-};
+// const nextPage = () => {
+//   if (currentPage.value < totalPages.value) {
+//     currentPage.value++;
+//   }
+// };
 const dropDownLinks = [
   { name: "QR login scanner", icon: "mdi:folder-outline", route: "project" },
   { name: "QR Cards PDF", icon: "mdi:folder-outline", route: "swms" },
