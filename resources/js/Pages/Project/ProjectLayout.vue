@@ -91,7 +91,7 @@ const props = defineProps({
 const tabs = [
   { name: "Summary", routeName: "project.show" },
   { name: "Members", routeName: "project-users.index" },
-  { name: "Buildings and tasks", routeName: "project.edit" },
+  { name: "Buildings and tasks", routeName: "buildings.index" },
   { name: "Contracts", routeName: "project.edit" },
   { name: "Pay rates", routeName: "project.edit" },
   { name: "Pay rate addons", routeName: "project.edit" },
