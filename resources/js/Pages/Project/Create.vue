@@ -1,7 +1,7 @@
 <template>
   <AuthenticatedLayout>
-    <header class="bg-gray-200 py-3 mx-auto w-full">
-      <div class="container mx-auto max-w-6xl">
+    <header class="bg-gray-100 py-3">
+      <div class="container mx-auto">
         <nav class="py-4 px-4 flex items-center justify-between mx-auto">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">Create Project</h1>
@@ -10,7 +10,7 @@
       </div>
     </header>
 
-    <div class="max-w-xl mx-auto m-4 p-8 bg-gray-100 rounded-lg">
+    <div class="max-w-xl mx-auto m-4 p-8 rounded-lg">
       <form @submit.prevent="create">
         <div class="grid grid-cols-1 gap-6">
           <div>
@@ -241,13 +241,5 @@ const create = () => {
 };
 </script>
 
-<style scoped>
-label {
-  margin-right: 2em;
-}
 
-div {
-  padding: 2px;
-}
-</style>
 

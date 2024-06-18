@@ -19,8 +19,8 @@ console.log(getAvatarUrl);
 
 <template>
   <div class="flex h-screen">
-    <Sidebar :user="user" />
-    <div class="flex-grow flex flex-col overflow-auto flex-1 min-h-screen">
+    <Sidebar :user="$page.props.auth.user" />
+    <div class="flex-grow flex flex-col overflow-auto flex-1">
       <div class="min-h-screen">
         <nav
           class="bg-gray-900 lg:bg-white block sm:hidden border-b border-gray-100"
@@ -210,7 +210,7 @@ console.log(getAvatarUrl);
 
         <!-- Page Heading -->
         <header class="shadow" v-if="$slots.header">
-          <div class="mx-auto max-w-6xl py-6 px-4 sm:px-6 lg:px-8">
+          <div class="mx-auto max-w-7xl py-6 px-4 sm:px-6 lg:px-8">
             <slot name="header" />
           </div>
         </header>

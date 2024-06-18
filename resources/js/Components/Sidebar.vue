@@ -52,24 +52,28 @@
           </li>
         </ul>
         <ul class="flex flex-1 flex-col">
-          <li v-if="user" class="text-left">
+          <li v-if="user" class="text-left rounded-lg">
             <a
-              class="flex items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+              class="flex items-center py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
               href=""
             >
-              <img src="" alt="" class="h-8 w-8 rounded-full bg-gray-800" />
+              <img
+                :src="getAvatarUrl(user.avatar)"
+                alt="Avatar"
+                class="h-8 w-8 rounded-full"
+              />
               <span class="sr-only">Your profile</span>
-              <span aria-hidden="true">{{ user.name }}</span></a
+              <span class="px-3" aria-hidden="true">{{ user.name }}</span></a
             >
           </li>
-          <li>
-            <!-- <Link
-              :href="route('destroy')"
-              method="delete"
+          <li class="hidden sm:block">
+            <Link
+              :href="route('logout')"
+              method="post"
               as="button"
-              class="flex w-full items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-800"
+              class="flex w-full items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
               >Sign out</Link
-            > -->
+            >
           </li>
         </ul>
       </nav>
@@ -143,6 +147,11 @@ onMounted(() => {
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
 });
+
+const getAvatarUrl = (avatarPath) => {
+  if (!avatarPath) return "";
+  return `${window.location.origin}/${avatarPath}`;
+};
 
 // Static data for sidebar links
 const mainLinks = [

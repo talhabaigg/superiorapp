@@ -65,7 +65,7 @@
           <ul v-else>
             <li v-for="task in building.tasks" :key="task.id">
               <div
-                class="mb-1 rounded-md border-l-4 border-r-4 border-gray-300 p-2 bg-white"
+                class="mb-1 rounded-md border-l-4 border-r-4 border-gray-300 p-2 bg-gray-100"
               >
                 <div class="flex relative mr-3">
                   <Link :href="route('buildingtask.toggle', task.id)"
