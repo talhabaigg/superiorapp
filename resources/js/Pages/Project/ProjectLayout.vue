@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedLayout>
-    <header class="bg-white py-3 px-4 sm:px-4 md:px-6">
+    <header class="bg-gray-100 py-3 px-4 sm:px-4 md:px-6">
       <div class="container mx-auto max-w-6xl">
         <nav class="py-4 pl-2 flex items-center justify-between max-w-6xl">
           <div>

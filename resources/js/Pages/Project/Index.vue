@@ -1,10 +1,8 @@
 <template>
   <AuthenticatedLayout>
-    <header class="bg-white py-3">
+    <header class="bg-gray-100 py-3">
       <div class="container mx-auto">
-        <nav
-          class="py-4 px-4 flex items-center justify-between mx-auto max-w-6xl"
-        >
+        <nav class="py-4 px-4 flex items-center justify-between mx-auto">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">Projects</h1>
           </div>
@@ -16,7 +14,7 @@
     </header>
     <div class="p-2">
       <div
-        class="my-2 flex flex-col space-y-2 mx-auto max-w-6xl sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
+        class="my-2 flex flex-col space-y-2 mx-auto max-w-7xl sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
       >
         <input
           v-model="searchQuery"
@@ -52,12 +50,12 @@
         </div>
       </div>
       <div
-        class="mt-2 relative overflow-x-auto mx-auto max-w-6xl rounded-lg sm:block overflow-y-auto"
+        class="mt-2 relative overflow-x-auto mx-auto max-w-7xl rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
-          <thead class="bg-gray-300">
+          <thead class="bg-gray-100">
             <tr>
               <th
                 scope="col"
