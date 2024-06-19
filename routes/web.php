@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\TimesheetController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -44,6 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/buildings/{building}/tasks/create', [BuildingTaskController::class, 'create'])->name('buildingtask.create');
     Route::post('projects/{project}/buildings/{building}/tasks', [BuildingTaskController::class, 'store'])->name('buildingtasks.store');
     Route::get('projects/tasks/{id}/toggle', [BuildingTaskController::class, 'toggleCompletion'])->name('buildingtask.toggle');
+
+    Route::get('/time-sheets/create', [TimesheetController::class, 'create'])->name('timesheet.create');
+    Route::post('/time-sheets/create', [TimesheetController::class, 'store'])->name('timesheet.store');
 });
 
 require __DIR__.'/auth.php';

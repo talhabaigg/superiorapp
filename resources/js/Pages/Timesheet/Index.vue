@@ -5,14 +5,11 @@
         <nav class="py-4 pl-2 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
-              {{ project.project_name }}
+              <!-- {{ project.project_name }} -->
             </h1>
             <ul class="flex items-center space-x-4 overflow-hidden">
               <li>
-                <Link
-                  :href="route('project.index')"
-                  class="text-gray-400 hover:text-gray-500"
-                >
+                <Link class="text-gray-400 hover:text-gray-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
@@ -47,10 +44,8 @@
               </li>
               <li>
                 <Link
-                  :href="route('project.show', project.id)"
                   class="ml-2 whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-700"
-                  >{{ project.project_name }}</Link
-                >
+                ></Link>
               </li>
             </ul>
           </div>
@@ -63,30 +58,27 @@
 
     <div class="hidden sm:block max-w-7xl mx-auto px-4 py-4 sm:px-6 md:px-8">
       <div class="border-b border-gray-200">
-        <nav class="-mb-px flex">
-          <TabLink
-            v-for="tab in tabs"
-            :key="tab.name"
-            :href="route(tab.routeName, { project: project.id })"
-            :active="route().current(tab.routeName, { project: project.id })"
-          >
-            {{ tab.name }}
-          </TabLink>
-        </nav>
+        <!-- <nav class="-mb-px flex">
+            <TabLink
+              v-for="tab in tabs"
+              :key="tab.name"
+              :href="route(tab.routeName, { project: project.id })"
+              :active="route().current(tab.routeName, { project: project.id })"
+            >
+              {{ tab.name }}
+            </TabLink>
+          </nav> -->
       </div>
 
       <slot />
     </div>
   </AuthenticatedLayout>
 </template>
-<script setup>
+  <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Link } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import TabLink from "@/Components/TabLink.vue";
-const props = defineProps({
-  project: Object,
-});
 
 const tabs = [
   { name: "Summary", routeName: "project.show" },
@@ -98,3 +90,4 @@ const tabs = [
   { name: "Absentee and injury alerts", routeName: "project.edit" },
 ];
 </script>
+  
