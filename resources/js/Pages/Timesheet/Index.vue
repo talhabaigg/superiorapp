@@ -2,92 +2,163 @@
   <AuthenticatedLayout>
     <header class="bg-gray-100 py-3 px-4 sm:px-4 md:px-6">
       <div class="container mx-auto">
-        <nav class="py-4 pl-2 flex items-center justify-between">
+        <nav class="py-2 pl-2 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
               <!-- {{ project.project_name }} -->
             </h1>
-            <ul class="flex items-center space-x-4 overflow-hidden">
-              <li>
-                <Link class="text-gray-400 hover:text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    class="h-5 w-5 flex-shrink-0"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M9.293 2.293a1 1 0 0 1 1.414 0l7 7A1 1 0 0 1 17 11h-1v6a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-3a1 1 0 0 0-1-1H9a1 1 0 0 0-1 1v3a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-6H3a1 1 0 0 1-.707-1.707l7-7Z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </Link>
-              </li>
-              <li>
-                <a class="text-gray-400 hover:text-gray-500">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                    class="h-5 w-5 flex-shrink-0 text-gray-400"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M8.22 5.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L11.94 10 8.22 6.28a.75.75 0 0 1 0-1.06Z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </a>
-              </li>
-              <li>
-                <Link
-                  class="ml-2 whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-700"
-                ></Link>
-              </li>
-            </ul>
+            <div>
+              <Breadcrumb :crumbs="crumbspage" />
+            </div>
           </div>
-          <Link class="mx-2">
-            <PrimaryButton>Edit</PrimaryButton>
+          <Link href="#" class="mx-2">
+            <PrimaryButton>Manage timesheet</PrimaryButton>
           </Link>
         </nav>
       </div>
     </header>
 
-    <div class="hidden sm:block max-w-7xl mx-auto px-4 py-4 sm:px-6 md:px-8">
-      <div class="border-b border-gray-200">
-        <!-- <nav class="-mb-px flex">
-            <TabLink
-              v-for="tab in tabs"
-              :key="tab.name"
-              :href="route(tab.routeName, { project: project.id })"
-              :active="route().current(tab.routeName, { project: project.id })"
-            >
-              {{ tab.name }}
-            </TabLink>
-          </nav> -->
+    <div class="hidden sm:block mx-auto px-4 py-4 sm:px-6 md:px-8">
+      <div class="flex items-center space-x-4">
+        <select
+          id="week-ending"
+          v-model="selectedWeekEnding"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option v-for="date in weekEndingOptions" :key="date" :value="date">
+            {{ date }}
+          </option>
+        </select>
       </div>
-
-      <slot />
+      <div
+        class="mt-2 relative overflow-x-auto mx-auto rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5 shadow-lg"
+      >
+        <table
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+        >
+          <thead class="bg-gray-100">
+            <tr>
+              <th
+                v-for="header in tableHeaders"
+                :key="header.name"
+                class="hidden px-3 py-5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+              >
+                {{ header.name }}
+              </th>
+              <th
+                v-for="date in weekDates"
+                :key="date"
+                class="px-4 py-2 text-xs text-gray-400"
+              >
+                {{ date }}
+              </th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200 bg-white">
+            <tr v-for="user in users" :key="user.id">
+              <td
+                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
+              >
+                <PrimaryBadge v-if="user.is_active">Active</PrimaryBadge>
+                <GrayBadge v-else>Inactive</GrayBadge>
+              </td>
+              <td
+                class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
+              >
+                <UnderlineLink>{{ user.name }}</UnderlineLink>
+              </td>
+              <td
+                class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
+              >
+                {{ user.superior_id }}
+              </td>
+              <td>265-65</td>
+              <td>26.03</td>
+              <td>No contracts</td>
+              <td
+                v-for="date in weekDates"
+                :key="date"
+                class="text-black text-right"
+              >
+                <div
+                  v-if="user.hours_worked[date]"
+                  class="bg-orange-400 py-4 pr-2 shadow-lg text-white"
+                >
+                  {{ user.hours_worked[date] }}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </AuthenticatedLayout>
 </template>
-  <script setup>
+
+<script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Link } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
+import { router } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-import TabLink from "@/Components/TabLink.vue";
+import PrimaryBadge from "@/Components/PrimaryBadge.vue";
+import GrayBadge from "@/Components/GrayBadge.vue";
+import UnderlineLink from "@/Components/UnderlineLink.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
+import dayjs from "dayjs";
 
-const tabs = [
-  { name: "Summary", routeName: "project.show" },
-  { name: "Members", routeName: "project-users.index" },
-  { name: "Buildings and tasks", routeName: "buildings.index" },
-  { name: "Contracts", routeName: "project.edit" },
-  { name: "Pay rates", routeName: "project.edit" },
-  { name: "Pay rate addons", routeName: "project.edit" },
-  { name: "Absentee and injury alerts", routeName: "project.edit" },
+// Props
+const props = defineProps({
+  users: {
+    type: Array,
+    required: true,
+  },
+  weekDates: {
+    type: Array,
+    required: true,
+  },
+  weekEnding: {
+    type: String,
+  },
+});
+
+const crumbspage = ref([
+  { label: "Home", href: "/dashboard" },
+  { label: "Timesheets", href: "/time-sheets" },
+]);
+
+const tableHeaders = [
+  { name: "Approved" },
+  { name: "Name" },
+  { name: "Employee ID" },
+  { name: "Cost code" },
+  { name: "Total gross claim" },
+  { name: "Contract bonus" },
 ];
+
+// Generate week ending options
+const generateWeekEndingOptions = () => {
+  const options = [];
+  const today = dayjs();
+  const currentWeekEnding = today.day(5); // Get the Friday of the current week
+  options.push(currentWeekEnding.format("DD-MM-YYYY"));
+
+  for (let i = 1; i <= 50; i++) {
+    options.push(currentWeekEnding.subtract(i, "week").format("DD-MM-YYYY"));
+  }
+
+  return options;
+};
+
+const weekEndingOptions = ref(generateWeekEndingOptions());
+const selectedWeekEnding = ref(props.weekEnding);
+
+const getTimesheetRoute = (date) => {
+  return route("timesheet.index", { week_ending: date });
+};
+
+// Watch selectedWeekEnding and navigate to the new route on change
+watch(selectedWeekEnding, (newDate) => {
+  router.get(getTimesheetRoute(newDate));
+});
 </script>
-  

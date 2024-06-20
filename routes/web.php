@@ -48,6 +48,8 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/time-sheets/create', [TimesheetController::class, 'create'])->name('timesheet.create');
     Route::post('/time-sheets/create', [TimesheetController::class, 'store'])->name('timesheet.store');
+
+    Route::get('/time-sheets', [TimesheetController::class, 'index'])->name('timesheet.index');
 });
 
 require __DIR__.'/auth.php';

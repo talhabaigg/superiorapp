@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Project::class);
     }
 
+    public function timesheets()
+    {
+        return $this->hasMany(Timesheet::class);
+    }
+
     public function toggleStatus()
     {
         $this->is_active = !$this->is_active;

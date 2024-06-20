@@ -157,7 +157,11 @@ const getAvatarUrl = (avatarPath) => {
 const mainLinks = [
   { name: "Projects", icon: "ph:building", route: "project" },
   { name: "Absentees", icon: "mdi:smiley-sad-outline", route: "" },
-  { name: "Timesheets", icon: "mdi:clock-outline", route: "" },
+  {
+    name: "Timesheets",
+    icon: "mdi:clock-outline",
+    route: "time-sheets",
+  },
   { name: "Payroll", icon: "clarity:dollar-solid", route: "" },
   { name: "Daily Pre-starts", icon: "mdi:calendar-check-outline", route: "" },
   { name: "Toolbox Talks", icon: "mdi:toolbox-outline", route: "" },

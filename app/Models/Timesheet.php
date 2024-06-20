@@ -10,7 +10,7 @@ class Timesheet extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id', 'project_id', 'date', 'start_time', 'end_time', 'hours_worked', 'description'
+        'user_id', 'project_id', 'date', 'start_time', 'end_time', 'hours_worked', 'notes'
     ];
 
     public function user()
