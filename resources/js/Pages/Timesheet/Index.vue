@@ -26,7 +26,41 @@
           class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
         >
           <option v-for="date in weekEndingOptions" :key="date" :value="date">
-            {{ date }}
+            Fri {{ date }}
+          </option>
+        </select>
+        <select
+          id="user-type"
+          v-model="selectedUserType"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option value="">Select user type</option>
+          <option value="1">Active</option>
+          <option value="0">Inactive</option>
+        </select>
+        <select
+          id="project-name"
+          v-model="selectedProject"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option value="">Select by project</option>
+          <option
+            v-for="project in projects"
+            :key="project.id"
+            :value="project.id"
+          >
+            {{ project.project_name }}
+          </option>
+        </select>
+
+        <select
+          id="employee-type"
+          v-model="selectedEmployeeType"
+          class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
+        >
+          <option value="">Select by employee type</option>
+          <option v-for="type in employeeTypes" :key="type" :value="type">
+            {{ type }}
           </option>
         </select>
       </div>
@@ -52,6 +86,8 @@
               >
                 {{ date }}
               </th>
+              <th class="px-2">Total</th>
+              <th class="px-2">Notes</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
@@ -72,9 +108,9 @@
               >
                 {{ user.superior_id }}
               </td>
-              <td>265-65</td>
-              <td>26.03</td>
-              <td>No contracts</td>
+              <td class="px-4">265-65</td>
+              <td class="px-4">26.03</td>
+              <td class="px-4">No contracts</td>
               <td
                 v-for="date in weekDates"
                 :key="date"
@@ -86,6 +122,23 @@
                 >
                   {{ user.hours_worked[date] }}
                 </div>
+              </td>
+              <td></td>
+              <td>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  data-slot="icon"
+                  class="h-8 w-8 cursor-pointer text-blue-500"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M3.43 2.524A41.29 41.29 0 0 1 10 2c2.236 0 4.43.18 6.57.524 1.437.231 2.43 1.49 2.43 2.902v5.148c0 1.413-.993 2.67-2.43 2.902a41.102 41.102 0 0 1-3.55.414c-.28.02-.521.18-.643.413l-1.712 3.293a.75.75 0 0 1-1.33 0l-1.713-3.293a.783.783 0 0 0-.642-.413 41.108 41.108 0 0 1-3.55-.414C1.993 13.245 1 11.986 1 10.574V5.426c0-1.413.993-2.67 2.43-2.902Z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
               </td>
             </tr>
           </tbody>
@@ -118,6 +171,26 @@ const props = defineProps({
     required: true,
   },
   weekEnding: {
+    type: String,
+    required: true,
+  },
+  selectedUserType: {
+    type: String,
+    default: "",
+  },
+  projectName: {
+    type: String,
+    default: "",
+  },
+  projects: {
+    type: Array,
+    required: true,
+  },
+  employeeTypes: {
+    type: Array,
+    required: true,
+  },
+  employeeType: {
     type: String,
   },
 });
@@ -152,13 +225,26 @@ const generateWeekEndingOptions = () => {
 
 const weekEndingOptions = ref(generateWeekEndingOptions());
 const selectedWeekEnding = ref(props.weekEnding);
+const selectedUserType = ref(props.selectedUserType || "");
+const selectedProject = ref(props.projectName || "");
+const selectedEmployeeType = ref(props.employeeType || "");
 
-const getTimesheetRoute = (date) => {
-  return route("timesheet.index", { week_ending: date });
+const getTimesheetRoute = (date, userType, project, employeeType) => {
+  return route("timesheet.index", {
+    week_ending: date,
+    usertype: userType,
+    projectName: project,
+    employeeType: employeeType,
+  });
 };
 
-// Watch selectedWeekEnding and navigate to the new route on change
-watch(selectedWeekEnding, (newDate) => {
-  router.get(getTimesheetRoute(newDate));
-});
+// Watch selectedWeekEnding, selectedUserType, and selectedProject, and navigate to the new route on change
+watch(
+  [selectedWeekEnding, selectedUserType, selectedProject, selectedEmployeeType],
+  ([newDate, newUserType, newProjectName, newEmployeeType]) => {
+    router.get(
+      getTimesheetRoute(newDate, newUserType, newProjectName, newEmployeeType)
+    );
+  }
+);
 </script>
