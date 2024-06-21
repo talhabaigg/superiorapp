@@ -51,7 +51,7 @@ class ProjectController extends Controller
      
         Project::create($validatedData);
 
-        return redirect()->route('project.index')->with('success', 'Listing was created!');
+        return redirect()->route('project.index')->with('success', 'Project was created!');
     }
 
     /**

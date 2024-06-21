@@ -7,14 +7,39 @@ import { Link } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import { usePage } from "@inertiajs/vue3";
 import Sidebar from "@/Components/Sidebar.vue";
-const page = usePage();
+import { computed, onMounted } from "vue";
+import { toast } from "vue3-toastify";
+import "vue3-toastify/dist/index.css";
 
+const page = usePage();
+const flashSuccess = computed(() => page.props.flash.success);
+const flashWarning = computed(() => page.props.flash.warning);
+
+const showToastSuccess = () => {
+  if (flashSuccess.value) {
+    toast.success(flashSuccess.value, {
+      autoClose: 5000, // Duration in milliseconds
+    });
+  }
+};
+
+const showToastWarn = () => {
+  if (flashWarning.value) {
+    toast.warn(flashWarning.value, {
+      autoClose: 5000, // Duration in milliseconds
+    });
+  }
+};
 const getAvatarUrl = (avatarPath) => {
   if (!avatarPath) return "";
   return `${window.location.origin}/${avatarPath}`;
 };
 
 console.log(getAvatarUrl);
+onMounted(() => {
+  showToastSuccess();
+  showToastWarn();
+});
 </script>
 
 <template>
