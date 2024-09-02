@@ -183,10 +183,10 @@
                       leave-to-class="transform scale-95 opacity-0"
                     >
                       <MenuItems
-                        class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
                         style="z-index: 9999"
                       >
-                        <div class="px-1 py-1">
+                        <div class="p-0.5">
                           <MenuItem v-slot="{ active }">
                             <Link :href="`/project/${project.id}`">
                               <button
@@ -200,6 +200,19 @@
                                 Profile
                               </button>
                             </Link>
+                          </MenuItem>
+                          <MenuItem v-slot="{ active }">
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 text-red-600'
+                                  : 'text-red-600',
+                                'group flex w-full items-center px-4 py-2 text-sm',
+                              ]"
+                              @click="deleteProject(project.id)"
+                            >
+                              Delete
+                            </button>
                           </MenuItem>
                         </div>
                       </MenuItems>
@@ -234,6 +247,7 @@ import { Link } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
+import { Inertia } from "@inertiajs/inertia";
 // Define props
 const props = defineProps({
   projects: Object,
@@ -286,7 +300,20 @@ const getProjects = (url) => {
     preserveState: true,
   });
 };
-
+const deleteProject = (projectId) => {
+  if (confirm("Are you sure you want to delete this project?")) {
+    Inertia.delete(route("project.destroy", projectId), {
+      onSuccess: () => {
+        // Handle successful deletion
+        console.log("Project deleted successfully");
+      },
+      onError: (errors) => {
+        // Handle errors
+        console.error("Deletion errors:", errors);
+      },
+    });
+  }
+};
 // // Computed property for paginated users
 // const paginatedProjects = computed(() => {
 //   const start = (currentPage.value - 1) * itemsPerPage.value;

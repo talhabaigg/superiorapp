@@ -12,7 +12,7 @@
       <!-- Logo -->
       <div class="mb-6 ml-3 flex justify-start rounded-md bg-gray-100 p-2">
         <ApplicationLogo class="block h-9 w-auto fill-current" />
-        <h2 class="text-bold text-gray-700 text-3xl ml-4">Sidebar</h2>
+        <h2 class="text-bold text-gray-700 text-3xl ml-4">Superior</h2>
       </div>
 
       <!-- Navigation Links -->

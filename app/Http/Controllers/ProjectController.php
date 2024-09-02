@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Inertia\Inertia;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProjectController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
+    use SoftDeletes;
     public function index(Request $request)
 {
     return Inertia::render('Project/Index', [
@@ -86,9 +88,13 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
-    {
-        //
-    }
+{
+    $project = Project::findOrFail($id);
+    $project->delete();
+
+    return redirect()->route('project.index')->with('success', 'Project is now deleted.!');
+}
+
 
     public function toggleStatus($id)
     {
