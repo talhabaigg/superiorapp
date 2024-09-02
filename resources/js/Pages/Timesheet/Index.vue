@@ -5,13 +5,14 @@
         <nav class="py-2 pl-2 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
-              <!-- {{ project.project_name }} -->
+              Timesheets - {{ formatDate(weekDates[0]) }} ~
+              {{ formatDate(weekDates[6]) }}
             </h1>
             <div>
               <Breadcrumb :crumbs="crumbspage" />
             </div>
           </div>
-          <Link href="#" class="mx-2">
+          <Link :href="route('timesheet.edit')" class="mx-2">
             <PrimaryButton>Manage timesheet</PrimaryButton>
           </Link>
         </nav>
@@ -19,6 +20,7 @@
     </header>
 
     <div class="hidden sm:block mx-auto px-4 py-4 sm:px-6 md:px-8">
+      <ColorLabelsTimesheet></ColorLabelsTimesheet>
       <div class="flex items-center space-x-4">
         <select
           id="week-ending"
@@ -65,7 +67,7 @@
         </select>
       </div>
       <div
-        class="mt-2 relative overflow-x-auto mx-auto rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5 shadow-lg"
+        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5 shadow-lg"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -91,74 +93,88 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="user in users" :key="user.id">
-              <td
-                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
-              >
-                <PrimaryBadge v-if="user.is_active">Active</PrimaryBadge>
-                <GrayBadge v-else>Inactive</GrayBadge>
-              </td>
-              <td
-                class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
-              >
-                <UnderlineLink>{{ user.name }}</UnderlineLink>
-              </td>
-              <td
-                class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
-              >
-                {{ user.superior_id }}
-              </td>
-              <td class="px-4">265-65</td>
-              <td class="px-4">26.03</td>
-              <td class="px-4">No contracts</td>
-              <td
-                v-for="date in weekDates"
-                :key="date"
-                class="text-black text-right"
-              >
-                <div
-                  v-if="user.hours_worked[date]"
-                  class="bg-orange-400 py-4 pr-2 shadow-lg text-white"
+            <template
+              v-for="(users, employeeType) in groupedUsersByType"
+              :key="employeeType"
+            >
+              <tr v-if="users.length > 0">
+                <td
+                  class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 bg-blue-100"
+                  colspan="15"
                 >
-                  {{ user.hours_worked[date] }}
-                </div>
-              </td>
-              <td></td>
-              <td>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  data-slot="icon"
-                  class="h-8 w-8 cursor-pointer text-blue-500"
+                  {{ employeeType }}
+                </td>
+              </tr>
+              <tr v-for="user in users" :key="user.id">
+                <td
+                  class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
                 >
-                  <path
-                    fill-rule="evenodd"
-                    d="M3.43 2.524A41.29 41.29 0 0 1 10 2c2.236 0 4.43.18 6.57.524 1.437.231 2.43 1.49 2.43 2.902v5.148c0 1.413-.993 2.67-2.43 2.902a41.102 41.102 0 0 1-3.55.414c-.28.02-.521.18-.643.413l-1.712 3.293a.75.75 0 0 1-1.33 0l-1.713-3.293a.783.783 0 0 0-.642-.413 41.108 41.108 0 0 1-3.55-.414C1.993 13.245 1 11.986 1 10.574V5.426c0-1.413.993-2.67 2.43-2.902Z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </td>
-            </tr>
+                  <PrimaryBadge v-if="user.is_active">Active</PrimaryBadge>
+                  <GrayBadge v-else>Inactive</GrayBadge>
+                </td>
+                <td
+                  class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
+                >
+                  <UnderlineLink>{{ user.name }}</UnderlineLink>
+                </td>
+                <td
+                  class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
+                >
+                  {{ user.superior_id }}
+                </td>
+                <td class="px-4">265-65</td>
+                <td class="px-4">26.03</td>
+                <td class="px-4">No contracts</td>
+                <td
+                  v-for="date in weekDates"
+                  :key="date"
+                  class="text-black text-right"
+                >
+                  <div
+                    v-if="user.hours_worked[date]"
+                    class="bg-orange-400 py-4 pr-2 shadow-lg text-white"
+                  >
+                    {{ user.hours_worked[date] }}
+                  </div>
+                </td>
+                <td></td>
+                <td>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                    data-slot="icon"
+                    class="h-8 w-8 cursor-pointer text-blue-500"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M3.43 2.524A41.29 41.29 0 0 1 10 2c2.236 0 4.43.18 6.57.524 1.437.231 2.43 1.49 2.43 2.902v5.148c0 1.413-.993 2.67-2.43 2.902a41.102 41.102 0 0 1-3.55.414c-.28.02-.521.18-.643.413l-1.712 3.293a.75.75 0 0 1-1.33 0l-1.713-3.293a.783.783 0 0 0-.642-.413 41.108 41.108 0 0 1-3.55-.414C1.993 13.245 1 11.986 1 10.574V5.426c0-1.413.993-2.67 2.43-2.902Z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </td>
+              </tr>
+            </template>
           </tbody>
         </table>
       </div>
     </div>
   </AuthenticatedLayout>
 </template>
-
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Link } from "@inertiajs/vue3";
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { router } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import PrimaryBadge from "@/Components/PrimaryBadge.vue";
 import GrayBadge from "@/Components/GrayBadge.vue";
 import UnderlineLink from "@/Components/UnderlineLink.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import ColorLabelsTimesheet from "@/Components/ColorLabelsTimesheet.vue";
 import dayjs from "dayjs";
+import { formatDate } from "@/Helpers/formatDate"; // Adjust the path accordingly
 
 // Props
 const props = defineProps({
@@ -198,6 +214,10 @@ const props = defineProps({
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
   { label: "Timesheets", href: "/time-sheets" },
+  {
+    label: `Week ending on ${props.weekEnding}`,
+    href: `/time-sheets?week_ending=${props.weekEnding}`,
+  },
 ]);
 
 const tableHeaders = [
@@ -228,6 +248,17 @@ const selectedWeekEnding = ref(props.weekEnding);
 const selectedUserType = ref(props.selectedUserType || "");
 const selectedProject = ref(props.projectName || "");
 const selectedEmployeeType = ref(props.employeeType || "");
+
+// Computed property to group users by employee type
+const groupedUsersByType = computed(() => {
+  return props.users.reduce((acc, user) => {
+    if (!acc[user.employee_type]) {
+      acc[user.employee_type] = [];
+    }
+    acc[user.employee_type].push(user);
+    return acc;
+  }, {});
+});
 
 const getTimesheetRoute = (date, userType, project, employeeType) => {
   return route("timesheet.index", {

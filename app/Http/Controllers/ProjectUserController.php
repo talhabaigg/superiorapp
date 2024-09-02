@@ -28,8 +28,8 @@ class ProjectUserController extends Controller
         ]);
 
         $project->users()->attach($request->user_id);
-
-        return redirect()->back()->with('success', 'User assigned to project successfully');
+        return redirect()->route('project.show', $project)->with('success', 'User assigned to project successfully!');
+        // return redirect()->back()->with('success', 'User assigned to project successfully');
     }
 
     public function destroy(Project $project, User $user)

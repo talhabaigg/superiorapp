@@ -70,7 +70,13 @@ class TimesheetController extends Controller
     $projects = Project::all();
     $employeeTypes = User::select('employee_type')->distinct()->pluck('employee_type');
     // Fetch users with their timesheets for the specified week and calculate hours worked
-    $usersQuery = User::with(['timesheets' => function($query) use ($startOfWeek, $endOfWeek, $projectName) {
+    // Fetch users with their timesheets for the specified week and calculate hours worked
+    $usersQuery = User::whereHas('timesheets', function($query) use ($startOfWeek, $endOfWeek, $projectName) {
+        $query->whereBetween('date', [$startOfWeek->format('d-m-Y'), $endOfWeek->format('d-m-Y')]);
+        if ($projectName !== null) {
+            $query->where('project_id', $projectName);
+        }
+    })->with(['timesheets' => function($query) use ($startOfWeek, $endOfWeek, $projectName) {
         $query->whereBetween('date', [$startOfWeek->format('d-m-Y'), $endOfWeek->format('d-m-Y')]);
         if ($projectName !== null) {
             $query->where('project_id', $projectName);
@@ -96,6 +102,7 @@ class TimesheetController extends Controller
         return [
             'id' => $user->id,
             'name' => $user->name,
+            'employee_type' => $user->employee_type,
             'superior_id' => $user->superior_id,
             'is_active' => $user->is_active,
             'hours_worked' => $hoursWorked,
@@ -115,5 +122,28 @@ class TimesheetController extends Controller
     ]);
 }
 
+public function weeklyEdit(request $request) {
+    // Get the week_ending date from the query parameters or default to this week's Friday
+    $today = Carbon::now();
+    $weekEnding = $today->isFriday() ? $today->format('d-m-Y') : $today->next(Carbon::FRIDAY)->format('d-m-Y');
+
+    // Override the weekEnding if provided in the query parameters
+    $weekEnding = $request->query('week_ending', $weekEnding);
+
+    // Parse the week_ending date and calculate the start date of the week
+    $endOfWeek = Carbon::createFromFormat('d-m-Y', $weekEnding);
+    $startOfWeek = $endOfWeek->copy()->subDays(6);
+
+    // Generate the dates for the week
+    $weekDates = collect(range(0, 6))->map(function($day) use ($startOfWeek) {
+        return $startOfWeek->copy()->addDays($day)->format('d-m-Y');
+    });
+
+    return inertia('Timesheet/Edit', [
+        'weekEnding' => $weekEnding,
+        'weekDates' => $weekDates,
+        
+    ]);
+}
       
 }

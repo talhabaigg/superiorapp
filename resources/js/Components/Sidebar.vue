@@ -19,7 +19,7 @@
       <nav>
         <ul>
           <!-- Main Links -->
-          <li v-for="link in mainLinks" :key="link.name" class="mb-1.5">
+          <li v-for="link in mainLinks" :key="link.name" class="mb-1">
             <Link
               :href="`/${link.route}`"
               class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white"
@@ -39,7 +39,7 @@
           </li>
 
           <!-- Administration Links -->
-          <li v-for="link in adminLinks" :key="link.name" class="mb-2">
+          <li v-for="link in adminLinks" :key="link.name" class="mb-1">
             <Link
               :href="`/${link.route}`"
               class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white"
@@ -55,7 +55,7 @@
           <li v-if="user" class="text-left rounded-lg">
             <a
               class="flex items-center py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
-              href=""
+              :href="route('users.show', user.id)"
             >
               <img
                 :src="getAvatarUrl(user.avatar)"
@@ -156,40 +156,40 @@ const getAvatarUrl = (avatarPath) => {
 // Static data for sidebar links
 const mainLinks = [
   { name: "Projects", icon: "ph:building", route: "project" },
-  { name: "Absentees", icon: "mdi:smiley-sad-outline", route: "" },
+  // { name: "Absentees", icon: "mdi:smiley-sad-outline", route: "" },
   {
     name: "Timesheets",
     icon: "mdi:clock-outline",
     route: "time-sheets",
   },
-  { name: "Payroll", icon: "clarity:dollar-solid", route: "" },
-  { name: "Daily Pre-starts", icon: "mdi:calendar-check-outline", route: "" },
-  { name: "Toolbox Talks", icon: "mdi:toolbox-outline", route: "" },
-  { name: "Quality Assurance", icon: "mdi:check-decagram-outline", route: "" },
-  { name: "SDS Register", icon: "mdi:book-lock-outline", route: "" },
+  // { name: "Payroll", icon: "clarity:dollar-solid", route: "" },
+  // { name: "Daily Pre-starts", icon: "mdi:calendar-check-outline", route: "" },
+  // { name: "Toolbox Talks", icon: "mdi:toolbox-outline", route: "" },
+  // { name: "Quality Assurance", icon: "mdi:check-decagram-outline", route: "" },
+  // { name: "SDS Register", icon: "mdi:book-lock-outline", route: "" },
   { name: "Team", icon: "mdi:account-group-outline", route: "users" },
-  { name: "SWMS", icon: "mdi:account-group-outline", route: "swms" },
+  // { name: "SWMS", icon: "mdi:account-group-outline", route: "swms" },
 ];
 
 const adminLinks = [
-  { name: "Cost codes", icon: "mdi:code-tags", route: "cost-code" },
-  {
-    name: "Employee types",
-    icon: "mdi:account-tie-outline",
-    route: "employee-type",
-  },
-  { name: "Base pay rates", icon: "mdi:cash-multiple", route: "base-pay-rate" },
-  {
-    name: "Base payroll addons",
-    icon: "mdi:cash-plus",
-    route: "base-payroll-addon",
-  },
-  { name: "Payroll codes", icon: "mdi:barcode", route: "payroll-code" },
-  {
-    name: "Application history",
-    icon: "mdi:history",
-    route: "application-history",
-  },
+  // { name: "Cost codes", icon: "mdi:cc", route: "cost-code" },
+  // {
+  //   name: "Employee types",
+  //   icon: "mdi:account-tie-outline",
+  //   route: "employee-type",
+  // },
+  // { name: "Base pay rates", icon: "mdi:cash-multiple", route: "base-pay-rate" },
+  // {
+  //   name: "Base payroll addons",
+  //   icon: "mdi:cash-plus",
+  //   route: "base-payroll-addon",
+  // },
+  // { name: "Payroll codes", icon: "mdi:barcode", route: "payroll-code" },
+  // {
+  //   name: "Application history",
+  //   icon: "mdi:history",
+  //   route: "application-history",
+  // },
 ];
 </script>
   

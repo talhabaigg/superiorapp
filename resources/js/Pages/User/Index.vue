@@ -1,24 +1,23 @@
 <template>
   <AuthenticatedLayout>
-    <div class="p-2">
-      <header class="bg-gray-100 py-3 rounded-lg">
-        <div class="container mx-auto max-w-7xl">
-          <nav class="p-4 flex items-center justify-between">
+    <header class="bg-gray-100 py-3">
+      <div class="container mx-auto">
+        <nav class="py-2 pl-2 flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-semibold text-gray-900">Team</h1>
             <div>
-              <h1 class="text-2xl font-semibold text-gray-900">Team</h1>
+              <Breadcrumb :crumbs="crumbspage" />
             </div>
-            <Link :href="route('users.create')">
-              <div
-                class="text-xs px-2.5 py-1.5 bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-400 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto"
-              >
-                Create User
-              </div>
-            </Link>
-          </nav>
-        </div>
-      </header>
+          </div>
+          <Link :href="route('users.create')" class="mx-2">
+            <PrimaryButton>Create User</PrimaryButton>
+          </Link>
+        </nav>
+      </div>
+    </header>
+    <div class="px-8">
       <div
-        class="my-2 flex flex-col space-y-2 mx-auto max-w-6xl sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
+        class="my-2 flex flex-col space-y-2 mx-auto sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
       >
         <input
           v-model="searchQuery"
@@ -64,7 +63,7 @@
       </div>
 
       <div
-        class="mt-2 relative overflow-x-auto mx-auto max-w-7xl rounded-lg sm:block overflow-y-hidden border"
+        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-hidden border shadow-md"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -105,6 +104,12 @@
               >
                 Email
               </th>
+              <th
+                scope="col"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+              >
+                Mobile
+              </th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
@@ -126,13 +131,17 @@
                     v-if="user.is_active === 1"
                     class="text-blue-600 hover:text-blue-900"
                   >
-                    {{ user.name }}
+                    <Link :href="route('users.show', user.id)">{{
+                      user.name
+                    }}</Link>
                   </div>
                   <div
                     v-else
                     class="text-blue-600 hover:text-blue-900 line-through"
                   >
-                    {{ user.name }} (Deleted user)
+                    <Link :href="route('users.show', user.id)"
+                      >{{ user.name }} (Deleted user)</Link
+                    >
                   </div>
                 </div>
               </td>
@@ -157,6 +166,14 @@
                 <div class="text-blue-600 hover:text-blue-900">
                   {{ user.email }}
                 </div>
+              </td>
+              <td>
+                <a
+                  :href="'tel:' + user.phone_number"
+                  class="text-blue-600 hover:text-blue-900"
+                >
+                  {{ user.phone_number }}
+                </a>
               </td>
             </tr>
           </tbody>
@@ -195,6 +212,8 @@
 import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 // Define props
@@ -203,7 +222,10 @@ const props = defineProps({
     type: Object,
   },
 });
-
+const crumbspage = ref([
+  { label: "Home", href: "/dashboard" },
+  { label: "Users", href: "/users" },
+]);
 // Reactive state for search and filter
 const searchQuery = ref("");
 const selectedEmployeeType = ref("");

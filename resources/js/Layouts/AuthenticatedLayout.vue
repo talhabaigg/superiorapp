@@ -35,7 +35,6 @@ const getAvatarUrl = (avatarPath) => {
   return `${window.location.origin}/${avatarPath}`;
 };
 
-console.log(getAvatarUrl);
 onMounted(() => {
   showToastSuccess();
   showToastWarn();

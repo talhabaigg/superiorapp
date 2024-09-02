@@ -13,7 +13,7 @@
       </div>
 
       <div
-        class="mt-2 relative overflow-x-auto mx-auto max-w-7xl rounded-lg sm:block overflow-y-hidden shadow ring-1 ring-black ring-opacity-5"
+        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-hidden shadow ring-1 ring-black ring-opacity-5"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"

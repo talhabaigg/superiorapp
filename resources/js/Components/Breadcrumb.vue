@@ -11,8 +11,8 @@
           v-if="crumb.href"
           :href="crumb.href"
           class="whitespace-nowrap text-sm font-medium text-gray-500 hover:text-gray-700"
-          >{{ crumb.label }}</Link
-        >
+          ><span v-html="crumb.icon ? crumb.icon : crumb.label"></span
+        ></Link>
         <span v-else>{{ crumb.label }}</span>
         <svg
           v-if="index < crumbs.length - 1"
@@ -32,6 +32,7 @@
   <script setup>
 import { Link } from "@inertiajs/vue3";
 import { defineProps } from "vue";
+import { Icon as IconifyIcon } from "@iconify/vue";
 
 const props = defineProps({
   crumbs: {

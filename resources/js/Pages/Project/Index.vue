@@ -1,10 +1,13 @@
 <template>
   <AuthenticatedLayout>
-    <header class="bg-gray-100 py-3">
+    <header class="bg-gray-100 py-3 px-4 sm:px-4 md:px-6">
       <div class="container mx-auto">
-        <nav class="py-4 px-4 flex items-center justify-between mx-auto">
+        <nav class="py-2 pl-2 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">Projects</h1>
+            <div>
+              <Breadcrumb :crumbs="crumbspage" />
+            </div>
           </div>
           <Link :href="route('project.create')">
             <PrimaryButton>Create Project</PrimaryButton>
@@ -12,9 +15,9 @@
         </nav>
       </div>
     </header>
-    <div class="p-2">
+    <div class="p-2 px-8">
       <div
-        class="my-2 flex flex-col space-y-2 mx-auto max-w-7xl sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
+        class="my-2 flex flex-col space-y-2 mx-auto sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
       >
         <input
           v-model="searchQuery"
@@ -50,7 +53,7 @@
         </div>
       </div>
       <div
-        class="mt-2 relative overflow-x-auto mx-auto max-w-7xl rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5"
+        class="mt-2 relative overflow-x-auto mx-auto rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -208,7 +211,7 @@
           </tbody>
         </table>
       </div>
-      <div class="mt-4 flex justify-between items-center max-w-6xl mx-auto">
+      <div class="mt-4 flex justify-between items-center mx-auto">
         <div
           v-if="projects.data.length"
           class="w-full flex justify-end mt-8 mb-8"
@@ -229,11 +232,17 @@ import GrayBadge from "@/Components/GrayBadge.vue";
 import { ref, computed } from "vue";
 import { Link } from "@inertiajs/vue3";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 // Define props
 const props = defineProps({
   projects: Object,
 });
+
+const crumbspage = ref([
+  { label: "Home", href: "/dashboard" },
+  { label: "Projects", href: "/project" },
+]);
 
 const getAvatarUrl = (avatarPath) => {
   if (!avatarPath) return "";
