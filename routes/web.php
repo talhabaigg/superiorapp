@@ -1,15 +1,17 @@
 <?php
 
-use App\Http\Controllers\BuildingController;
-use App\Http\Controllers\BuildingTaskController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
-use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\PrestartController;
 use App\Http\Controllers\TimesheetController;
+use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\BuildingTaskController;
+use App\Http\Controllers\PrestartSignedController;
 
 // Public routes
 Route::get('/', function () {
@@ -59,6 +61,14 @@ Route::middleware('auth')->group(function () {
     
     //Manage Personal timesheets
     Route::get('/time-sheets/edit', [TimesheetController::class, 'weeklyEdit'])->name('timesheet.edit');
+
+    // Prestart management
+    Route::resource('daily-prestarts', PrestartController::class);
+    Route::get('/daily-prestarts/{prestart}/sign-sheet-template', [PrestartController::class, 'signsheetTemplate'])->name('daily-prestarts.signsheet-template');
+    Route::get('/daily-prestarts/{prestart}/pdf', [PrestartController::class, 'prestartPdf'])->name('daily-prestarts.pdf');
+
+    Route::get('/daily-prestart-signed/{prestart}/file', [PrestartController::class, 'uploadSignedPagesPDF'])->name('daily-prestart-signed.uploadpdf');
+    Route::post('/prestart-signed/save', [PrestartSignedController::class, 'save'])->name('prestart-signed.save');
 });
 
 // Authentication routes

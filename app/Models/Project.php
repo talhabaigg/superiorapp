@@ -43,5 +43,10 @@ class Project extends Model
     {
         return $this->hasMany(Building::class);
     }
+
+    public function prestarts()
+    {
+        return $this->hasMany(Prestart::class);
+    }
    
 }

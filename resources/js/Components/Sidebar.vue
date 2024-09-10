@@ -163,7 +163,11 @@ const mainLinks = [
     route: "time-sheets",
   },
   // { name: "Payroll", icon: "clarity:dollar-solid", route: "" },
-  // { name: "Daily Pre-starts", icon: "mdi:calendar-check-outline", route: "" },
+  {
+    name: "Daily Pre-starts",
+    icon: "mdi:calendar-check-outline",
+    route: "daily-prestarts",
+  },
   // { name: "Toolbox Talks", icon: "mdi:toolbox-outline", route: "" },
   // { name: "Quality Assurance", icon: "mdi:check-decagram-outline", route: "" },
   // { name: "SDS Register", icon: "mdi:book-lock-outline", route: "" },
