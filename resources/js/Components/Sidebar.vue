@@ -156,7 +156,7 @@ const getAvatarUrl = (avatarPath) => {
 // Static data for sidebar links
 const mainLinks = [
   { name: "Projects", icon: "ph:building", route: "project" },
-  // { name: "Absentees", icon: "mdi:smiley-sad-outline", route: "" },
+  { name: "Absentees", icon: "mdi:smiley-sad-outline", route: "" },
   {
     name: "Timesheets",
     icon: "mdi:clock-outline",

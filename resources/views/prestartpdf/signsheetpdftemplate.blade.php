@@ -29,9 +29,26 @@
             width: 25%;
             text-align: left;
         }
+        .logo {
+            position: relative;
+            top: 10px;
+            left: 10px;
+            width: auto;
+            height: 75px;
+        }
+        .line {
+            margin-top: 10px;
+            border-bottom: 1px solid #000000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 1px;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
+    <img src="{{ public_path('logo1.jpg') }}" alt="Logo" class="logo">
+    <div class="line"></div>
     <h1>Daily Pre-start</h1>
     <table>
         <tr>

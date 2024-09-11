@@ -24,12 +24,16 @@ class ProjectUserController extends Controller
     public function store(Request $request, Project $project)
     {
         $request->validate([
-            'user_id' => 'required|exists:users,id'
+            'members' => 'required|array',
+            'members.*' => 'exists:users,id',
         ]);
 
-        $project->users()->attach($request->user_id);
-        return redirect()->route('project.show', $project)->with('success', 'User assigned to project successfully!');
-        // return redirect()->back()->with('success', 'User assigned to project successfully');
+        // Sync the selected users as project members
+        $project->users()->sync($request->members);
+
+        // Redirect with a success message
+        return redirect()->route('project.show', $project)
+                        ->with('success', 'Project members updated successfully!');
     }
 
     public function destroy(Project $project, User $user)
@@ -37,5 +41,15 @@ class ProjectUserController extends Controller
         $project->users()->detach($user->id);
 
         return redirect()->back()->with('success', 'User removed from project successfully');
+    }
+
+    public function edit(Project $project) {
+        $allUsers= User::all();
+        $users = $project->users->pluck('id')->toArray();
+        return Inertia::render('ProjectUsers/Edit', [
+            'project' => $project,
+            'existingMembers' => $users,
+            'allUsers' => $allUsers
+        ]);
     }
 }

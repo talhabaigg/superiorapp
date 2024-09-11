@@ -12,6 +12,8 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\WorkdatesHelper;
 use App\Helpers\DateFormatHelper;
+use iio\libmergepdf\Merger;
+use iio\libmergepdf\Pages;
 
 class PrestartController extends Controller
 {
@@ -71,8 +73,8 @@ $prestarts->getCollection()->transform(function ($prestart) {
     {
         
     // Fetch all projects where 'completed' is 0
-    $projects_completed = Project::where('completed', 0)->get();
-    $projects_active = Project::where('completed', 1)->get();
+    $projects_completed = Project::where('completed', 1)->get();
+    $projects_active = Project::where('completed', 0)->get();
     $foremen = User::where('employee_type', 'Foreman' )->get();
     
     // Pass the projects to the Inertia view
@@ -182,18 +184,52 @@ $prestarts->getCollection()->transform(function ($prestart) {
         return $pdf->stream('prestart_' . $prestart->id . '.pdf');
     }
     public function prestartPdf(Prestart $prestart)
-    {
-        // Load related data
-        $prestart->load(['project', 'foreman']);
+{
+    // Load related data
+    $prestart->load(['project', 'foreman', 'prestartSigned']);
 
-        // Format the workdate
-        $formattedDate = DateFormatHelper::formatDate($prestart->workdate);
-        // Generate PDF
-        $pdf = Pdf::loadView('prestartpdf.pdf', ['prestart' => $prestart, 'formattedDate' => $formattedDate]);
+    // Format the workdate
+    $formattedDate = DateFormatHelper::formatDate($prestart->workdate);
 
-        // Download PDF with a unique filename
-        return $pdf->stream('prestart_' . $prestart->id . '.pdf');
+    // Generate PDF and save it to a temporary file
+    $pdf = Pdf::loadView('prestartpdf.pdf', ['prestart' => $prestart, 'formattedDate' => $formattedDate]);
+    $pdfFilePath = storage_path('app/public/prestart_' . $prestart->id . '.pdf');
+    $pdf->save($pdfFilePath);
+
+    if ($prestart->pdf_path) {
+        // Merge PDFs if $prestart->pdf_path is not NULL
+        $mergedPdfPath = $this->mergePdfs($pdfFilePath, storage_path('app/public/' . $prestart->pdf_path));
+    } else {
+        // No merging, just use the generated PDF
+        $mergedPdfPath = $pdfFilePath;
     }
+
+    // Return the final PDF for download
+    // return response()->download($mergedPdfPath)->deleteFileAfterSend(true);
+    // return $mergedPdfPath->stream('prestart_' . $prestart->id . '.pdf');
+    // Return the final PDF for inline viewing
+    return response()->file($mergedPdfPath, [
+        'Content-Type' => 'application/pdf',
+        'Content-Disposition' => 'inline; filename="' . basename($mergedPdfPath) . '"',
+    ]);
+}
+
+    protected function mergePdfs($pdfFilePath, $prestartPdfPath)
+{
+    // Create a new Merger instance and add files
+    $merger = new Merger;
+    $merger->addFile($pdfFilePath);
+    $merger->addFile($prestartPdfPath);
+
+    // Merge the PDFs
+    $createdPdf = $merger->merge();
+
+    // Save the merged PDF to a temporary file
+    $mergedPdfFilePath = storage_path('app/public/merged_prestart_' . basename($pdfFilePath));
+    file_put_contents($mergedPdfFilePath, $createdPdf);
+
+    return $mergedPdfFilePath;
+}
     public function uploadSignedPagesPDF(Prestart $prestart) {
         $prestart->load(['project.users']);
         return Inertia::render('Daily-Prestart-Signed/UploadSignedPagesPDF', ['prestart' => $prestart]);

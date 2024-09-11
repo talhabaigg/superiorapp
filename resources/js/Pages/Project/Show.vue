@@ -225,7 +225,11 @@
                   </div>
                 </div>
                 <div v-if="project.users.length > 4" class="">
-                  <GrayBadge>SHOW ALL - {{ project.users.length }}</GrayBadge>
+                  <UnderlineLink :href="`/project-members/${project.id}`"
+                    ><GrayBadge
+                      >SHOW ALL - {{ project.users.length }}</GrayBadge
+                    ></UnderlineLink
+                  >
                 </div>
               </div>
             </div>
@@ -240,6 +244,7 @@
 import PrimaryBadge from "@/Components/PrimaryBadge.vue";
 import GrayBadge from "@/Components/GrayBadge.vue";
 import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
+import UnderlineLink from "@/Components/UnderlineLink.vue";
 const props = defineProps({
   project: Object,
 });

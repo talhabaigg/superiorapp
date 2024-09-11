@@ -29,26 +29,57 @@
             width: 25%;
             text-align: left;
         }
+        .logo {
+            position: relative;
+            top: 10px;
+            left: 10px;
+            width: auto;
+            height: 75px;
+        }
+        .line {
+            margin-top: 10px;
+            border-bottom: 1px solid #000000;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 1px;
+            opacity: 0.6;
+        }
     </style>
 </head>
 <body>
+    
+    <img src="{{ public_path('logo1.jpg') }}" alt="Logo" class="logo">
+    <div class="line"></div>
     <h1>Daily Pre-start</h1>
+    
     <table>
         <tr>
             <th class="headertd">Project Name</th>
             <td class="headertd">{{$prestart->project->project_name}}</td>
             <th class="headertd">Date</th>
-            <td class="headertd">15</td>
+            <td class="headertd">{{$formattedDate}}</td>
         </tr>
         <tr>
             <th class="headertd">No of workers</th>
-            <td class="headertd">{{$prestart->project->project_name}}</td>
+            <td class="headertd"> 
+                @if($prestart->prestartSigned->isNotEmpty())
+                {{ $prestart->prestartSigned->where('status', 'onsite')->count() }}
+                @else
+                0
+                 @endif
+            </td>
             <th class="headertd">No. of absentees</th>
-            <td class="headertd">3</td>
+            <td class="headertd"> {{ $prestart->prestartSigned->whereIn('status', ['sick', 'other'])->count() }}</td>
         </tr>
         <tr>
             <th class="headertd">Foreman</th>
-            <td class="headertd" colspan="3">{{$prestart->foreman->name}}</td>
+            <td class="headertd" colspan="3">
+                @if ($prestart->foreman)
+        {{ $prestart->foreman->name }}
+    @else
+        No foreman selected
+    @endif
+            </td>
         </tr>
         <tr>
             <th class="headertd">Weather</th>

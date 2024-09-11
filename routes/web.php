@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/projects/{project}/users', [ProjectUserController::class, 'store'])->name('project-users.store');
     Route::delete('/projects/{project}/users/{user}', [ProjectUserController::class, 'destroy'])->name('project-users.destroy');
     Route::get('/project-members/{project}', [ProjectUserController::class, 'index'])->name('project-users.index');
+    Route::get('project-members/{project}/edit', [ProjectUserController::class, 'edit'])->name('project-users.edit');
 
     // Building management within projects
     Route::get('projects/{project}/buildings', [BuildingController::class, 'index'])->name('buildings.index');

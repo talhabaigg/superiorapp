@@ -2,14 +2,18 @@
   <ProjectLayout :project="project">
     <div>
       <div class="m-2">
-        <form @submit.prevent="addUser">
+        <!-- <form @submit.prevent="addUser">
           <select v-model="newUserId">
             <option v-for="user in allUsers" :key="user.id" :value="user.id">
               {{ user.name }}
             </option>
           </select>
           <button type="submit">Add User</button>
-        </form>
+        </form> -->
+
+        <UnderlineLink :href="`/project-members/${project.id}/edit`">
+          <PrimaryButton>Edit project members</PrimaryButton>
+        </UnderlineLink>
       </div>
 
       <div
@@ -128,6 +132,8 @@
 import { ref } from "vue";
 import { useForm } from "@inertiajs/vue3";
 import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
+import UnderlineLink from "@/Components/UnderlineLink.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
 
 const getAvatarUrl = (avatarPath) => {
   if (!avatarPath) return "";
