@@ -26,8 +26,8 @@ class PrestartController extends Controller
     $workdays = WorkdatesHelper::getLastWorkdays(400, 'Australia/Sydney');
 
      // Fetch all projects where 'completed' is 0
-     $projects_completed = Project::where('completed', 0)->get();
-     $projects_active = Project::where('completed', 1)->get();
+     $projects_completed = Project::where('completed', 1)->get();
+     $projects_active = Project::where('completed', 0)->get();
     
      // Retrieve search filters from the request
     $workdate = $request->input('workdate');
@@ -35,7 +35,7 @@ class PrestartController extends Controller
 
     
      // Fetch prestarts with project and foreman, applying filters
-     $prestarts = Prestart::with(['project', 'foreman', 'prestartSigned.user'])
+     $prestarts = Prestart::with(['project', 'foreman', 'prestartSigned.user', 'prestartAbsent.user'])
      ->when($workdate, function ($query, $workdate) {
          // Filter by workdate
          return $query->whereDate('workdate', $workdate);
@@ -48,9 +48,11 @@ class PrestartController extends Controller
      ->paginate(20);
     //  dd($prestarts->toArray());
     // Ensure prestartSigned is an array
+    
 $prestarts->getCollection()->transform(function ($prestart) {
     $prestart->workdate = \App\Helpers\DateFormatHelper::formatDate($prestart->workdate);
     $prestart->prestartSigned = $prestart->prestartSigned ?: []; // Ensure it's an array
+    $prestart->prestartAbsent = $prestart->prestartAbsent ?: [];
     return $prestart;
     });
 

@@ -144,10 +144,9 @@
                   <div class="hidden md:flex -space-x-2">
                     <!-- Filter prestartSigned to include only "Present" statuses -->
                     <div
-                      v-for="user in getPresentUsers(
-                        prestart.prestartSigned
-                      ).slice(0, 5)"
+                      v-for="user in prestart.prestartSigned"
                       :key="user.user.id"
+                      @click="handleAbsentData(prestart.prestartAbsent)"
                     >
                       <img
                         :src="getAvatarUrl(user.user.avatar)"
@@ -165,9 +164,7 @@
                   <div class="hidden md:flex -space-x-2">
                     <!-- Filter prestartSigned to include only "Present" statuses -->
                     <div
-                      v-for="user in getAbsentUsers(
-                        prestart.prestartSigned
-                      ).slice(0, 5)"
+                      v-for="user in prestart.prestartAbsent"
                       :key="user.user.id"
                     >
                       <img
@@ -176,6 +173,19 @@
                         class="h-8 w-8 rounded-full border-2 border-white"
                       />
                     </div>
+                  </div>
+                  <div v-if="prestart.prestartAbsent.length > 0">
+                    <span
+                      ><Link
+                        class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden xl:block"
+                        :href="`/absent/${prestart.id}/manage`"
+                      >
+                        Manage
+                        <span
+                          >({{ prestart.prestartAbsent.length }})</span
+                        ></Link
+                      ></span
+                    >
                   </div>
                 </div>
               </td>
@@ -358,7 +368,9 @@ const isWorkdateTodayOrFuture = (workdate) => {
   // Check if the workdate is today or in the future
   return prestartDate >= today.setHours(0, 0, 0, 0);
 };
-
+const handleAbsentData = (prestartAbsent) => {
+  console.log(prestartAbsent);
+};
 const menuItemcActiveclass = "text-gray-900 text-left hover:bg-gray-100";
 const menuItemRedActiveclass = "bg-gray-100 text-red-600";
 const menuItemcInactiveclass = "text-gray-900 text-left";
@@ -395,16 +407,4 @@ watch([selectedWorkday, selectedProject], ([newDate, newProject]) => {
     router.get(getPrestartIndex(null, null));
   }
 });
-
-// Method to filter users with status "Present"
-const getPresentUsers = (prestartSigned) => {
-  return prestartSigned.filter((signed) => signed.status === "onsite");
-};
-
-// Method to filter users with status "sick" or "other"
-const getAbsentUsers = (prestartSigned) => {
-  return prestartSigned.filter(
-    (signed) => signed.status === "sick" || signed.status === "other"
-  );
-};
 </script>

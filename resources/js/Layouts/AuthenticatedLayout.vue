@@ -65,7 +65,7 @@ onMounted(() => {
                   <button
                     class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 focus:outline-none transition duration-150 ease-in-out"
                   >
-                    <svg
+                    <!-- <svg
                       class="h-6 w-6"
                       stroke="currentColor"
                       fill="none"
@@ -91,7 +91,7 @@ onMounted(() => {
                         stroke-width="2"
                         d="M6 18L18 6M6 6l12 12"
                       />
-                    </svg>
+                    </svg> -->
                   </button>
                 </div>
 

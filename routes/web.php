@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AbsentController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
@@ -70,6 +71,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/daily-prestart-signed/{prestart}/file', [PrestartController::class, 'uploadSignedPagesPDF'])->name('daily-prestart-signed.uploadpdf');
     Route::post('/prestart-signed/save', [PrestartSignedController::class, 'save'])->name('prestart-signed.save');
+
+    //Absentee management
+    Route::get('/absent/{prestart}/manage', [AbsentController::class, 'manage'])->name('absentee.manage');
+    Route::post('/prestart/absentees/store', [AbsentController::class, 'store'])->name('prestart.absentees.store');
+    Route::get('/absent', [AbsentController::class, 'index'])->name('absentee.index');
 });
 
 // Authentication routes

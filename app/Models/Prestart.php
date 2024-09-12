@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Activity;
 use App\Models\Incident;
+use App\Models\PrestartAbsent;
+use App\Models\PrestartSigned;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -34,5 +36,9 @@ class Prestart extends Model
 
     public function prestartSigned() {
         return $this->hasMany(PrestartSigned::class);
+    }
+    
+    public function prestartAbsent() {
+        return $this->hasMany(PrestartAbsent::class);
     }
 }
