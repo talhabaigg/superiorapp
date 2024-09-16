@@ -179,7 +179,67 @@
                 <tr v-for="date in weekDates" :key="date">
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-center"
-                  ></td>
+                  >
+                    <Link
+                      :href="
+                        route('timesheet.approve', {
+                          date: date,
+                          userId: user.id,
+                        })
+                      "
+                    >
+                      <div v-if="timesheets.hours_worked[date]">
+                        <div v-if="timesheets.is_approved[date] === 1">
+                          <button
+                            id="headlessui-popover-button-296"
+                            type="button"
+                            aria-expanded="false"
+                            data-headlessui-state=""
+                            title="Unapprove"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              data-slot="icon"
+                              class="text-green-500 cursor-pointer h-8 w-8"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        </div>
+                        <div v-else>
+                          <button
+                            id="headlessui-popover-button-761"
+                            type="button"
+                            aria-expanded="false"
+                            data-headlessui-state=""
+                            title="Approve"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 20 20"
+                              fill="currentColor"
+                              aria-hidden="true"
+                              data-slot="icon"
+                              class="text-gray-200 cursor-pointer h-8 w-8"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    </Link>
+                  </td>
                   <td
                     class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
                   >
@@ -189,30 +249,30 @@
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
                   ></td>
-                  <td
-                    class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  >
+                  <td class="hidden p-1 text-xs text-gray-500 sm:table-cell">
                     {{ timesheets.start_time[date] || "" }}
                   </td>
-                  <td
-                    class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  >
+                  <td class="hidden p-1 text-xs text-gray-500 sm:table-cell">
                     {{ timesheets.end_time[date] || "" }}
                   </td>
-                  <td
-                    class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  >
+                  <td class="hidden p-1 text-xs text-gray-500 sm:table-cell">
                     {{ timesheets.hours_worked[date] || "" }}
                   </td>
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  ></td>
+                  >
+                    {{ timesheets.laser_allowance[date] || "" }}
+                  </td>
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  ></td>
+                  >
+                    {{ timesheets.insulation_allowance[date] || "" }}
+                  </td>
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  ></td>
+                  >
+                    {{ timesheets.marker_allowance[date] || "" }}
+                  </td>
 
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
@@ -229,9 +289,115 @@
                       Edit timesheet
                     </Link>
                   </td>
+
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
-                  ></td>
+                  >
+                    <button type="button" @click="openModal(date)">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
+                        data-slot="icon"
+                        class="h-6 w-6 cursor-pointer text-blue-500"
+                      >
+                        <path
+                          fill-rule="evenodd"
+                          d="M3.43 2.524A41.29 41.29 0 0 1 10 2c2.236 0 4.43.18 6.57.524 1.437.231 2.43 1.49 2.43 2.902v5.148c0 1.413-.993 2.67-2.43 2.902a41.102 41.102 0 0 1-3.55.414c-.28.02-.521.18-.643.413l-1.712 3.293a.75.75 0 0 1-1.33 0l-1.713-3.293a.783.783 0 0 0-.642-.413 41.108 41.108 0 0 1-3.55-.414C1.993 13.245 1 11.986 1 10.574V5.426c0-1.413.993-2.67 2.43-2.902Z"
+                          clip-rule="evenodd"
+                        ></path>
+                      </svg>
+                    </button>
+                    <TransitionRoot appear :show="isOpen" as="template">
+                      <Dialog
+                        as="div"
+                        @close="closeModal"
+                        class="relative z-10"
+                      >
+                        <TransitionChild
+                          as="template"
+                          enter="duration-300 ease-out"
+                          enter-from="opacity-0"
+                          enter-to="opacity-100"
+                          leave="duration-200 ease-in"
+                          leave-from="opacity-100"
+                          leave-to="opacity-0"
+                        >
+                          <div class="fixed inset-0 bg-black/25" />
+                        </TransitionChild>
+
+                        <div class="fixed inset-0 overflow-y-auto">
+                          <div
+                            class="flex min-h-full items-center justify-center p-4 text-center"
+                          >
+                            <TransitionChild
+                              as="template"
+                              enter="duration-300 ease-out"
+                              enter-from="opacity-0 scale-95"
+                              enter-to="opacity-100 scale-100"
+                              leave="duration-200 ease-in"
+                              leave-from="opacity-100 scale-100"
+                              leave-to="opacity-0 scale-95"
+                            >
+                              <DialogPanel
+                                class="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all"
+                              >
+                                <div class="flex justify-between items-center">
+                                  <DialogTitle
+                                    as="h3"
+                                    class="text-lg font-medium leading-6 text-gray-900"
+                                  >
+                                    Notes
+                                  </DialogTitle>
+                                  <div class="">
+                                    <button
+                                      type="button"
+                                      class="inline-flex justify-center rounded-md border border-transparent bg-blue-100 px-2 py-2 text-blue-900 hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                                      @click="closeModal"
+                                    >
+                                      <svg
+                                        width="12"
+                                        height="12"
+                                        viewPort="0 0 12 12"
+                                        version="1.1"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                      >
+                                        <line
+                                          x1="1"
+                                          y1="11"
+                                          x2="11"
+                                          y2="1"
+                                          stroke="black"
+                                          stroke-width="2"
+                                        />
+                                        <line
+                                          x1="1"
+                                          y1="1"
+                                          x2="11"
+                                          y2="11"
+                                          stroke="black"
+                                          stroke-width="2"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </div>
+                                </div>
+                                <div class="mt-2">
+                                  <p class="text-sm text-gray-500">
+                                    {{
+                                      timesheets.notes[selectedDate] ||
+                                      "No notes available"
+                                    }}
+                                  </p>
+                                </div>
+                              </DialogPanel>
+                            </TransitionChild>
+                          </div>
+                        </div>
+                      </Dialog>
+                    </TransitionRoot>
+                  </td>
                   <td
                     class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell"
                   ></td>
@@ -384,6 +550,25 @@ import { ref, watch, computed } from "vue";
 import { usePage, Link } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import {
+  TransitionRoot,
+  TransitionChild,
+  Dialog,
+  DialogPanel,
+  DialogTitle,
+} from "@headlessui/vue";
+
+const isOpen = ref(false);
+const selectedDate = ref(null);
+
+function closeModal() {
+  isOpen.value = false;
+}
+function openModal(date) {
+  isOpen.value = true;
+  selectedDate.value = date.toString();
+  console.log(selectedDate.value);
+}
 const page = usePage();
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },

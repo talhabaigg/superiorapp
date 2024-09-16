@@ -65,7 +65,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/time-sheets/edit', [TimesheetController::class, 'weeklyEdit'])->name('timesheet.edit');
       //Manage Personal timesheets
     Route::get('/time-sheets/{id}/{date}/manage', [TimesheetController::class, 'showTimesheet'])->name('timesheets.show');
-
+    Route::get('/timesheet/approve/{date}/{userId}', [TimesheetController::class, 'toggleApproval'])->name('timesheet.approve');
     // Prestart management
     Route::resource('daily-prestarts', PrestartController::class);
     Route::get('/daily-prestarts/{prestart}/sign-sheet-template', [PrestartController::class, 'signsheetTemplate'])->name('daily-prestarts.signsheet-template');

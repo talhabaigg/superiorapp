@@ -23,28 +23,36 @@ class TimesheetController extends Controller
         'end_time.hour' => 'required|min:0|max:23',
         'end_time.minute' => 'required|min:0|max:59',
        
-        'description' => 'nullable|string',
+      
     ]);
 
+
     // Prepare the start_time and end_time by combining hour and minute components
-    $start_time = sprintf('%02d:%02d', $request->input('start_time_hour'), $request->input('start_time_minute'));
-    $end_time = sprintf('%02d:%02d', $request->input('end_time_hour'), $request->input('end_time_minute'));
-dd($start_time);
+    $start_time = sprintf('%02d:%02d', $request->input('start_time.hour'), $request->input('start_time.minute'));
+    $end_time = sprintf('%02d:%02d', $request->input('end_time.hour'), $request->input('end_time.minute'));
+
+    // Calculate hours worked
+    $start = new \DateTime($start_time);
+    $end = new \DateTime($end_time);
+    $interval = $start->diff($end);
+    $hours_worked = $interval->h + ($interval->i / 60); // Convert minutes to a fraction of an hour
+
+        
     // Prepare the data for storage
     $data = $request->only([
         'user_id',
         'project_id',
         'date',
         'hours_worked',
-        'description'
+        'notes'
     ]);
 
     // Add the formatted times to the data array
     $data['start_time'] = $start_time;
     $data['end_time'] = $end_time;
-
+    $data['hours_worked'] = $hours_worked;
     // Convert the date format for storage
-    $data['date'] = Carbon::createFromFormat('Y-m-d', $request->input('date'))->format('d-m-Y');
+    // $data['date'] = Carbon::createFromFormat('Y-m-d', $request->input('date'))->format('d-m-Y');
 
     // Define the unique attributes to check for existence
     $attributes = [
@@ -55,9 +63,9 @@ dd($start_time);
 
     // Use updateOrCreate to either update the existing record or create a new one
     Timesheet::updateOrCreate($attributes, $data);
-
-    // Redirect back with a success message
-    return redirect()->back()->with('success', 'Timesheet saved successfully.');
+    return redirect()->route('timesheet.index')
+    ->with('success', 'Timesheet saved successfully.');
+    
 }
 
 
@@ -248,20 +256,36 @@ private function fetchUsersWithTimesheets($startOfWeek, $endOfWeek, $projectName
 
 private function mapUserTimesheets($user, $weekDates)
 {
-    // Map hours worked for each date in the week
-    $hoursWorked = $weekDates->mapWithKeys(function ($date) use ($user) {
-        $timesheet = $user->timesheets->firstWhere('date', $date);
-        return [$date => $timesheet ? $timesheet->hours_worked : ''];
-    });
+    // Get all timesheets for the user within the weekDates range
+    $timesheets = $user->timesheets->whereIn('date', $weekDates);
 
-    $startTime = $weekDates->mapWithKeys(function ($date) use ($user) {
-        $timesheet = $user->timesheets->firstWhere('date', $date);
-        return [$date => $timesheet ? $timesheet->start_time : ''];
-    });
-    $endTime = $weekDates->mapWithKeys(function ($date) use ($user) {
-        $timesheet = $user->timesheets->firstWhere('date', $date);
-        return [$date => $timesheet ? $timesheet->end_time : ''];
-    });
+    // Initialize arrays to hold mapped data
+    $hoursWorked = [];
+    $startTime = [];
+    $endTime = [];
+    $notes = [];
+    $payType = [];
+    $isApproved = [];
+    $laserAllowance = [];
+    $markerAllowance = [];
+    $insulationAllowance = [];
+
+    // Loop through each date to map data
+    foreach ($weekDates as $date) {
+        // Find the timesheet for the given date
+        $timesheet = $timesheets->firstWhere('date', $date);
+        
+        // Map attributes to corresponding arrays
+        $hoursWorked[$date] = $timesheet ? $timesheet->hours_worked : '';
+        $startTime[$date] = $timesheet ? $timesheet->start_time : '';
+        $endTime[$date] = $timesheet ? $timesheet->end_time : '';
+        $notes[$date] = $timesheet ? $timesheet->notes : '';
+        $payType[$date] = $timesheet ? $timesheet->pay_type : '';
+        $isApproved[$date] = $timesheet ? $timesheet->is_approved : '';
+        $laserAllowance[$date] = $timesheet ? $timesheet->laser_allowance : '';
+        $markerAllowance[$date] = $timesheet ? $timesheet->marker_allowance : '';
+        $insulationAllowance[$date] = $timesheet ? $timesheet->insulation_allowance : '';
+    }
 
     // Return the structured data for the user
     return [
@@ -273,8 +297,15 @@ private function mapUserTimesheets($user, $weekDates)
         'hours_worked' => $hoursWorked,
         'start_time' => $startTime,
         'end_time' => $endTime,
+        'notes' => $notes,
+        'pay_type' => $payType,
+        'is_approved' => $isApproved,
+        'laser_allowance' => $laserAllowance,
+        'marker_allowance' => $markerAllowance,
+        'insulation_allowance' => $insulationAllowance,
     ];
 }
+
 
 public function weeklyEdit(Request $request)
 {
@@ -309,7 +340,7 @@ public function showTimesheet($id, $date)
 
     // Initialize default values for start_time and end_time
     $startHour = $startMinute = $endHour = $endMinute = null;
-   
+   $notes = null;
     if ($timesheet) {
         // Split start_time into hours and minutes
         $startTimeParts = explode(':', $timesheet->start_time);
@@ -320,6 +351,9 @@ public function showTimesheet($id, $date)
         $endTimeParts = explode(':', $timesheet->end_time);
         $endHour = $endTimeParts[0];
         $endMinute = $endTimeParts[1];
+
+         // Get notes from timesheet
+         $notes = $timesheet->notes;
     }
     
     // Pass the timesheet data to the view
@@ -333,6 +367,7 @@ public function showTimesheet($id, $date)
                 'hour' => $endHour,
                 'minute' => $endMinute,
             ],
+            'notes' => $notes, // Include notes
         ],
         'userId' => $id,
         'date' => $date,
@@ -341,4 +376,22 @@ public function showTimesheet($id, $date)
     ]);
 
 }
+public function toggleApproval($date, $userId)
+    {
+        // Fetch all timesheet entries for the given user and date
+        $timesheets = Timesheet::where('user_id', $userId)
+                               ->where('date', $date)
+                               ->get();
+
+        // Toggle the approval status
+        foreach ($timesheets as $timesheet) {
+            $timesheet->is_approved = !$timesheet->is_approved;
+            $timesheet->save();
+            
+        }
+        
+        // Redirect or return a response
+        return redirect()->back()
+        ->with('success', 'Timesheet updated');
+    }
 }

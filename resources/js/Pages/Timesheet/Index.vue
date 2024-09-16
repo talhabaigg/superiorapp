@@ -86,7 +86,7 @@
                 :key="date"
                 class="px-4 py-2 text-xs text-gray-400"
               >
-                {{ date }}
+                {{ formatDate(date) }}
               </th>
               <th class="px-2">Total</th>
               <th class="px-2">Notes</th>
@@ -130,11 +130,16 @@
                   :key="date"
                   class="text-black text-right"
                 >
-                  <div
-                    v-if="user.hours_worked[date]"
-                    class="bg-orange-400 py-4 pr-2 shadow-lg text-white"
-                  >
-                    {{ user.hours_worked[date] }}
+                  <div v-if="user.hours_worked[date]">
+                    <div
+                      :class="{
+                        'bg-orange-400 text-white': user.hours_worked[date] > 8,
+                        'bg-gray-20 text-black': user.hours_worked[date] <= 8,
+                      }"
+                      class="py-4 pr-2 shadow-md"
+                    >
+                      {{ user.hours_worked[date] }}
+                    </div>
                   </div>
                 </td>
                 <td></td>
@@ -158,6 +163,56 @@
             </template>
           </tbody>
         </table>
+      </div>
+      <div>
+        <h3 class="mt-10 text-lg font-bold">
+          Employees that have not created a timesheet
+        </h3>
+        <div
+          class="-mx-4 mt-8 overflow-y-hidden overflow-x-scroll shadow ring-1 ring-black ring-opacity-5 sm:-mx-6 md:mx-0 md:rounded-lg"
+        >
+          <table class="min-w-full divide-y divide-gray-300">
+            <thead class="bg-gray-100">
+              <tr>
+                <th
+                  scope="col"
+                  class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                >
+                  Employee
+                </th>
+                <th
+                  scope="col"
+                  class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                ></th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-200 bg-white">
+              <tr v-for="user in projectUsers" :key="user.id">
+                <td
+                  class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6 whitespace-nowrap"
+                >
+                  <a
+                    class="text-blue-600 hover:text-blue-900"
+                    href="https://app.superiorgroup.com.au/users/216"
+                    >Anga Fotu</a
+                  ><span class="ml-1 text-gray-400"
+                    >- Labourer (Full-time)</span
+                  >
+                </td>
+                <td
+                  class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-right"
+                >
+                  <a
+                    class="text-sm px-4 py-2 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto"
+                    href="https://app.superiorgroup.com.au/time-sheets/216/2024-09-20"
+                  >
+                    Manage timesheet
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </AuthenticatedLayout>

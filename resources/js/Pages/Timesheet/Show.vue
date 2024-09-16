@@ -15,7 +15,7 @@
       </div>
     </header>
     <div class="px-4 py-4 sm:px-6 md:px-8">
-      <h3 class="mb-2 font-medium">Hours - Sun, 08 Sep</h3>
+      <h3 class="mb-2 font-medium">Hours - {{ formatDate(date) }}</h3>
 
       <div class="mb-6 rounded border bg-gray-50 p-4">
         <form @submit.prevent="submit">
@@ -101,11 +101,11 @@
             <p class="mt-2 text-sm text-red-600"></p>
           </div> -->
           </div>
-          <div class="mt-4">
+          <!-- <div class="mt-4">
             <PrimaryButton type="submit" :disabled="form.processing"
               >Save Timesheet</PrimaryButton
             >
-          </div>
+          </div> -->
         </form>
         <div>
           <div class="mb-3 inline-flex align-top">
@@ -351,6 +351,7 @@
                 placeholder="Optional notes"
                 class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
                 value=""
+                v-model="form.notes"
               ></textarea>
             </div>
             <!---->
@@ -408,19 +409,16 @@
           </button>
         </div>
       </div>
-      <div class="mt-8">
-        <button
+      <div class="mt-8 space-x-2">
+        <PrimaryButton
+          @click="submit"
+          :disabled="form.processing"
           type="button"
           class="text-lg px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 focus:ring-blue-400 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto mr-2 disabled:opacity-50"
         >
-          Save</button
-        ><a
-          class="text-blue-600 hover:text-blue-900 ml-6 mt-2"
-          disabled="false"
-          size="lg"
-          href="https://app.staging.superiorgroup.com.au/time-sheets/134/2024-09-13"
-          >Cancel</a
+          Save</PrimaryButton
         >
+        <UnderlineLink :href="route('timesheet.index')">Cancel</UnderlineLink>
       </div>
     </div>
   </AuthenticatedLayout>
@@ -431,6 +429,7 @@ import { ref, computed } from "vue";
 import { usePage, Link, useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
+import UnderlineLink from "@/Components/UnderlineLink.vue";
 
 // Define breadcrumbs for the page navigation
 const crumbspage = ref([
@@ -465,6 +464,10 @@ const form = useForm({
     hour: props.timesheet.end_time.hour || "",
     minute: props.timesheet.start_time.minute || "",
   },
+  notes: props.timesheet.notes || "",
+  laser_allowance: props.laser_allowance || "",
+  marker_allowance: props.marker_allowance || "",
+  insulation_allowance: props.insulation_allowance || "",
 });
 
 // Arrays for hour and minute options
@@ -535,6 +538,7 @@ function formatDate(inputDate) {
 }
 // Submit form data
 const submit = () => {
+  console.log("Form data before submission:", form);
   form.post("/time-sheets/create", {
     onSuccess: () => {
       console.log("Timesheet saved successfully");
