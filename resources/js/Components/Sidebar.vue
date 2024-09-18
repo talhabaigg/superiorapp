@@ -19,10 +19,15 @@
       <nav>
         <ul>
           <!-- Main Links -->
-          <li v-for="link in mainLinks" :key="link.name" class="mb-1">
+          <li v-for="link in mainLinks" :key="link.name" class="mb-0.5">
             <Link
               :href="`/${link.route}`"
-              class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white"
+              :class="{
+                'flex items-center space-x-3 p-2 rounded cursor-pointer font-semibold leading-6 text-white bg-gray-700':
+                  page.url === `/${link.route}`,
+                'flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white':
+                  page.url !== `/${link.route}`,
+              }"
             >
               <div class="text-xl">
                 <iconify-icon :icon="link.icon"></iconify-icon>
@@ -122,7 +127,7 @@ const props = defineProps({
 const logout = () => {
   Inertia.post(route("logout"));
 };
-
+const page = usePage();
 const isCollapsed = ref(true);
 const isMobile = ref(window.innerWidth < 1024);
 

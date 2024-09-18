@@ -1,6 +1,6 @@
 <template>
   <AuthenticatedLayout>
-    <header class="bg-gray-100 py-3">
+    <header class="bg-gray-100 py-3 px-4 sm:px-4 md:px-6">
       <div class="container mx-auto">
         <nav class="py-2 pl-2 flex items-center justify-between">
           <div>
@@ -15,7 +15,7 @@
         </nav>
       </div>
     </header>
-    <div class="px-8">
+    <div class="p-2 px-8">
       <div
         class="my-2 flex flex-col space-y-2 mx-auto sm:flex-row sm:items-center sm:space-y-0 sm:space-x-4"
       >
@@ -30,7 +30,7 @@
           class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
         >
           <option value="">All Employee Types</option>
-          <option v-for="type in employeeTypes" :key="type" :value="type">
+          <option v-for="type in employee_types" :key="type" :value="type">
             {{ type }}
           </option>
         </select>
@@ -63,7 +63,7 @@
       </div>
 
       <div
-        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-hidden border shadow-md"
+        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-auto border shadow-md"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -113,7 +113,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
-            <tr v-for="user in filteredUsers" :key="user.id">
+            <tr v-for="user in users.data" :key="user.id">
               <td
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
@@ -209,8 +209,8 @@
 </template>
   
   <script setup>
-import { ref, computed } from "vue";
-import { Link, usePage } from "@inertiajs/vue3";
+import { ref, watch, computed } from "vue";
+import { Link, usePage, router } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
@@ -221,71 +221,45 @@ const props = defineProps({
   users: {
     type: Object,
   },
+  filters: {
+    type: Object,
+  },
+  employee_types: {
+    type: Array,
+  },
 });
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
   { label: "Users", href: "/users" },
 ]);
 // Reactive state for search and filter
-const searchQuery = ref("");
-const selectedEmployeeType = ref("");
+const searchQuery = ref(props.filters.searchQuery || "");
+const selectedEmployeeType = ref(props.filters.selectedEmployeeType || "");
 const selectedSubsidiaryType = ref("Superior Walls & Ceilings");
-const selectedStatusType = ref("1");
+const selectedStatusType = ref(props.filters.selectedStatusType || "");
 
-// Reactive state for pagination
-const currentPage = ref(1);
-const itemsPerPage = ref(9);
-
-const getUniqueEmployeeTypes = (users) => {
-  const employeeTypes = users.data.map((user) => user.employee_type);
-  return [...new Set(employeeTypes)];
-};
-const employeeTypes = ref(getUniqueEmployeeTypes(props.users));
-// Computed property to filter users based on search query and selected employee type
-const filteredUsers = computed(() => {
-  return props.users.data.filter((user) => {
-    const matchesSearchQuery = user.name
-      .toLowerCase()
-      .includes(searchQuery.value.toLowerCase());
-    const matchesEmployeeType =
-      selectedEmployeeType.value === "" ||
-      user.employee_type === selectedEmployeeType.value;
-    const matchesStatusType =
-      selectedStatusType.value === "" ||
-      user.is_active.toString() === selectedStatusType.value;
-    return matchesSearchQuery && matchesEmployeeType && matchesStatusType;
+const getUserIndex = (newQuery, newEmployeeType, newStatusType) => {
+  return route("users.index", {
+    searchQuery: newQuery,
+    selectedEmployeeType: newEmployeeType,
+    selectedStatusType: newStatusType,
   });
+};
+
+watch([searchQuery, selectedEmployeeType, selectedStatusType], () => {
+  router.get(
+    getUserIndex(
+      searchQuery.value,
+      selectedEmployeeType.value,
+      selectedStatusType.value
+    )
+  );
 });
-
-// Computed property for paginated users
-// const paginatedUsers = computed(() => {
-//   const start = (currentPage.value - 1) * itemsPerPage.value;
-//   const end = start + itemsPerPage.value;
-//   return filteredUsers.value.slice(start, end);
-// });
-
-// // Computed property for total pages
-// const totalPages = computed(() => {
-//   return Math.ceil(filteredUsers.value.length / itemsPerPage.value);
-// });
-
-// // Methods for pagination
-// const prevPage = () => {
-//   if (currentPage.value > 1) {
-//     currentPage.value--;
-//   }
-// };
-
-// const nextPage = () => {
-//   if (currentPage.value < totalPages.value) {
-//     currentPage.value++;
-//   }
-// };
 
 const resetFields = () => {
   searchQuery.value = "";
   selectedEmployeeType.value = "";
-  selectedStatusType.value = "1";
+  selectedStatusType.value = "";
 };
 </script>
   

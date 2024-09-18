@@ -146,12 +146,12 @@
                     <div
                       v-for="user in prestart.prestartSigned"
                       :key="user.user.id"
-                      @click="handleAbsentData(prestart.prestartAbsent)"
                     >
                       <img
                         :src="getAvatarUrl(user.user.avatar)"
                         alt="Avatar"
                         class="h-8 w-8 rounded-full border-2 border-white"
+                        :title="user.user.name"
                       />
                     </div>
                   </div>
@@ -163,6 +163,7 @@
                 <div class="flex items-center space-x-2">
                   <div class="hidden md:flex -space-x-2">
                     <!-- Filter prestartSigned to include only "Present" statuses -->
+                    <!-- <UserAvatars :users="prestart.prestartAbsent" :limit="5" /> -->
                     <div
                       v-for="user in prestart.prestartAbsent"
                       :key="user.user.id"
@@ -171,6 +172,7 @@
                         :src="getAvatarUrl(user.user.avatar)"
                         alt="Avatar"
                         class="h-8 w-8 rounded-full border-2 border-white"
+                        :title="user.user.name"
                       />
                     </div>
                   </div>
@@ -333,6 +335,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import Pagination from "@/Components/Pagination.vue";
 import UnderlineLink from "@/Components/UnderlineLink.vue";
 import { router } from "@inertiajs/vue3";
+import UserAvatars from "@/Components/UserAvatar.vue";
 const props = defineProps({
   workdays: Object,
   projects_completed: Object,
@@ -342,6 +345,7 @@ const props = defineProps({
   workdate: Object,
   project: Object,
 });
+
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
   { label: "Daily-Prestarts", href: "/daily-prestarts" },

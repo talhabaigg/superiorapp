@@ -131,16 +131,7 @@
               >
                 <div class="flex items-center space-x-2">
                   <div class="hidden md:flex -space-x-2">
-                    <div
-                      v-for="user in project.users.slice(0, 5)"
-                      :key="user.id"
-                    >
-                      <img
-                        :src="getAvatarUrl(user.avatar)"
-                        alt="Avatar"
-                        class="h-8 w-8 rounded-full border-2 border-white"
-                      />
-                    </div>
+                    <UserAvatars :users="project.users" :limit="5" />
                   </div>
                   <div v-if="project.users.length > 4" class="">
                     <Link
@@ -154,10 +145,7 @@
               </td>
               <td class="relative">
                 <div class="relative w-8 h-8">
-                  <Menu
-                    as="div"
-                    class="h-8 w-8 rounded-full relative inline-block text-left"
-                  >
+                  <Menu as="div" class="relative inline-block text-left">
                     <MenuButton
                       type="button"
                       class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200"
@@ -184,9 +172,8 @@
                     >
                       <MenuItems
                         class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
-                        style="z-index: 9999"
                       >
-                        <div class="p-0.5">
+                        <div>
                           <MenuItem v-slot="{ active }">
                             <Link :href="`/project/${project.id}`">
                               <button
@@ -248,6 +235,7 @@ import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { Inertia } from "@inertiajs/inertia";
+import UserAvatars from "@/Components/UserAvatar.vue";
 // Define props
 const props = defineProps({
   projects: Object,

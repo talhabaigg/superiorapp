@@ -13,6 +13,7 @@ use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\BuildingTaskController;
 use App\Http\Controllers\PrestartSignedController;
+use App\Http\Controllers\PageController;
 
 // Public routes
 Route::get('/', function () {
@@ -23,7 +24,6 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
-
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
@@ -62,7 +62,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/time-sheets', [TimesheetController::class, 'index'])->name('timesheet.index');
     
     //Manage Personal timesheets
-    Route::get('/time-sheets/edit', [TimesheetController::class, 'weeklyEdit'])->name('timesheet.edit');
+    // Route::get('/time-sheets/edit', [TimesheetController::class, 'weeklyEdit'])->name('timesheet.edit');
+    Route::get('/time-sheets/{id}/{weekEnding}', [TimesheetController::class, 'weeklyEdit'])->name('timesheet.edit');
+
       //Manage Personal timesheets
     Route::get('/time-sheets/{id}/{date}/manage', [TimesheetController::class, 'showTimesheet'])->name('timesheets.show');
     Route::get('/timesheet/approve/{date}/{userId}', [TimesheetController::class, 'toggleApproval'])->name('timesheet.approve');
@@ -80,5 +82,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/absent', [AbsentController::class, 'index'])->name('absentee.index');
 });
 
+Route::fallback([PageController::class, 'notfound'])->where('catchall', '.*');
 // Authentication routes
 require __DIR__.'/auth.php';

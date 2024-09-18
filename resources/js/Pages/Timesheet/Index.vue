@@ -12,7 +12,15 @@
               <Breadcrumb :crumbs="crumbspage" />
             </div>
           </div>
-          <Link :href="route('timesheet.edit')" class="mx-2">
+          <Link
+            :href="
+              route('timesheet.edit', {
+                id: loggedInUserId,
+                weekEnding: weekEnding,
+              })
+            "
+            class="mx-2"
+          >
             <PrimaryButton>Manage timesheet</PrimaryButton>
           </Link>
         </nav>
@@ -115,7 +123,15 @@
                 <td
                   class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
                 >
-                  <UnderlineLink>{{ user.name }}</UnderlineLink>
+                  <UnderlineLink
+                    :href="
+                      route('timesheet.edit', {
+                        id: user.id,
+                        weekEnding: weekEnding,
+                      })
+                    "
+                    >{{ user.name }}</UnderlineLink
+                  >
                 </td>
                 <td
                   class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
@@ -164,7 +180,7 @@
           </tbody>
         </table>
       </div>
-      <div>
+      <div v-if="userswithoutTimesheet">
         <h3 class="mt-10 text-lg font-bold">
           Employees that have not created a timesheet
         </h3>
@@ -187,27 +203,31 @@
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200 bg-white">
-              <tr v-for="user in projectUsers" :key="user.id">
+              <tr v-for="user in userswithoutTimesheet" :key="user.id">
                 <td
                   class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6 whitespace-nowrap"
                 >
-                  <a
+                  <Link
                     class="text-blue-600 hover:text-blue-900"
-                    href="https://app.superiorgroup.com.au/users/216"
-                    >Anga Fotu</a
+                    :href="route('users.show', user.id)"
+                    >{{ user.name }}</Link
                   ><span class="ml-1 text-gray-400"
-                    >- Labourer (Full-time)</span
+                    >- {{ user.employee_type }}</span
                   >
                 </td>
                 <td
                   class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell text-right"
                 >
-                  <a
+                  <Link
                     class="text-sm px-4 py-2 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto"
-                    href="https://app.superiorgroup.com.au/time-sheets/216/2024-09-20"
+                    :href="
+                      route('timesheet.edit', {
+                        id: user.id,
+                        weekEnding: weekEnding,
+                      })
+                    "
+                    >Manage timesheet</Link
                   >
-                    Manage timesheet
-                  </a>
                 </td>
               </tr>
             </tbody>
@@ -263,6 +283,12 @@ const props = defineProps({
   },
   employeeType: {
     type: String,
+  },
+  userswithoutTimesheet: {
+    type: Object,
+  },
+  loggedInUserId: {
+    type: Number,
   },
 });
 

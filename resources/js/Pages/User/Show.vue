@@ -138,17 +138,32 @@
               <div class="border-t border-gray-200 py-6 pl-4 pr-2 sm:pl-6">
                 <ul role="list" class="space-y-4">
                   <li>
-                    <a
-                      class="text-blue-600 hover:text-blue-900"
-                      href="https://app.superiorgroup.com.au/time-sheets/423/2024-06-28"
+                    <Link
+                      class="text-blue-600 hover:text-blue-900 mr-2"
+                      :href="
+                        route('timesheet.edit', {
+                          id: user.id,
+                          weekEnding: today,
+                        })
+                      "
+                      >This weeks timesheet</Link
                     >
-                      This weeks timesheet
-                    </a>
                   </li>
                   <li v-for="timesheet in user.timesheets" :key="timesheet.id">
-                    <a class="text-blue-600 hover:text-blue-900 mr-2">{{
+                    <!-- <a class="text-blue-600 hover:text-blue-900 mr-2">{{
                       timesheet.date
-                    }}</a>
+                    }}</a> -->
+
+                    <Link
+                      class="text-blue-600 hover:text-blue-900 mr-2"
+                      :href="
+                        route('timesheet.edit', {
+                          id: user.id,
+                          weekEnding: timesheet.date,
+                        })
+                      "
+                      >{{ timesheet.date }}</Link
+                    >
                   </li>
                 </ul>
               </div>
@@ -172,6 +187,9 @@ const props = defineProps({
   user: {
     type: Object,
     required: true,
+  },
+  today: {
+    type: Text,
   },
 });
 

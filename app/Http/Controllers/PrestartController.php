@@ -46,8 +46,7 @@ class PrestartController extends Controller
      })
      ->orderByDesc('created_at')
      ->paginate(20);
-    //  dd($prestarts->toArray());
-    // Ensure prestartSigned is an array
+
     
 $prestarts->getCollection()->transform(function ($prestart) {
     $prestart->workdate = \App\Helpers\DateFormatHelper::formatDate($prestart->workdate);

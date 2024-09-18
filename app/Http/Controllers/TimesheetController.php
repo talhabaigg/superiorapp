@@ -23,7 +23,6 @@ class TimesheetController extends Controller
         'end_time.hour' => 'required|min:0|max:23',
         'end_time.minute' => 'required|min:0|max:59',
        
-      
     ]);
 
 
@@ -169,10 +168,11 @@ public function index(Request $request)
 
     // Calculate the start and end of the week based on the weekEnding date
     [$startOfWeek, $endOfWeek] = $this->getWeekStartAndEndDates($weekEnding);
-
+    $loggedInUserId = auth()->id();
     // Generate all dates for the week
     $weekDates = $this->generateWeekDates($startOfWeek);
-
+    // Initialize projectUsers to null
+    $userswithoutTimesheet = null;
     // Fetch projects and employee types for the filters
     $projects = Project::all();
     $employeeTypes = $this->getEmployeeTypes();
@@ -180,6 +180,25 @@ public function index(Request $request)
     // Fetch users with timesheets and apply filters
     $usersData = $this->fetchUsersWithTimesheets($startOfWeek, $endOfWeek, $projectName, $usertype, $employeeType, $weekDates);
 
+    // Check if projectName filter is provided
+    if ($projectName) {
+        // Fetch the project by its name
+        $project = Project::where('id', $projectName)->with('users')->first();
+
+        // If the project exists, fetch its users
+        if ($project) {
+            $projectUsers = $project->users;
+
+            // Filter out users who are already in usersData
+            $usersDataIds = $usersData->pluck('id')->toArray(); // Get an array of user IDs from usersData
+
+            $userswithoutTimesheet = $projectUsers->filter(function ($user) use ($usersDataIds) {
+                return !in_array($user->id, $usersDataIds); // Only keep users not in usersData
+            });
+        }
+    }
+
+ 
     // Return data to the view
     return inertia('Timesheet/Index', [
         'users' => $usersData,
@@ -188,8 +207,10 @@ public function index(Request $request)
         'selectedUserType' => $usertype,
         'projectName' => $projectName,
         'projects' => $projects,
+        'userswithoutTimesheet' => $userswithoutTimesheet, // Pass filtered projectUsers to the front end
         'employeeTypes' => $employeeTypes,
         'employeeType' => $employeeType,
+        'loggedInUserId' => $loggedInUserId, // Pass the logged-in user ID
     ]);
 }
 
@@ -307,19 +328,47 @@ private function mapUserTimesheets($user, $weekDates)
 }
 
 
-public function weeklyEdit(Request $request)
-{
-    // Fetch the week-ending date using the helper function
-    $weekEnding = $this->getWeekEnding($request);
+// public function weeklyEdit(Request $request)
+// {
+//     // Fetch the week-ending date using the helper function
+//     $weekEnding = $this->getWeekEnding($request);
 
-    // Calculate the start and end of the week using the helper function
-    [$startOfWeek, $endOfWeek] = $this->getWeekStartAndEndDates($weekEnding);
+//     // Calculate the start and end of the week using the helper function
+//     [$startOfWeek, $endOfWeek] = $this->getWeekStartAndEndDates($weekEnding);
+
+//     // Generate all dates for the week using the helper function
+//     $weekDates = $this->generateWeekDates($startOfWeek);
+
+//     // Get the authenticated user
+//     $user = auth()->user();
+
+//     // Fetch timesheets for the user and map the data
+//     $mappedTimesheets = $this->mapUserTimesheets($user, $weekDates);
+
+//     // Return data to the view
+//     return inertia('Timesheet/Edit', [
+//         'weekEnding' => $weekEnding,
+//         'weekDates' => $weekDates,
+//         'timesheets' => $mappedTimesheets, // Pass the mapped timesheets data to the view
+//         'user' => $user,
+//     ]);
+// }  
+
+public function weeklyEdit(Request $request, $id, $weekEnding)
+{
+
+   // Convert $weekEnding to a Carbon instance if it's not already
+    $weekEndingDate = Carbon::createFromFormat('d-m-Y', $weekEnding);
+    $defaultWeekEnding = $weekEndingDate->isFriday() ? $weekEndingDate->format('d-m-Y') : $weekEndingDate->next(Carbon::FRIDAY)->format('d-m-Y');
+
+    // Calculate the start and end of the week using the provided weekEnding date
+    [$startOfWeek, $endOfWeek] = $this->getWeekStartAndEndDates($defaultWeekEnding);
 
     // Generate all dates for the week using the helper function
     $weekDates = $this->generateWeekDates($startOfWeek);
 
-    // Get the authenticated user
-    $user = auth()->user();
+    // Fetch the user based on the provided ID
+    $user = User::findOrFail($id);
 
     // Fetch timesheets for the user and map the data
     $mappedTimesheets = $this->mapUserTimesheets($user, $weekDates);
@@ -331,7 +380,7 @@ public function weeklyEdit(Request $request)
         'timesheets' => $mappedTimesheets, // Pass the mapped timesheets data to the view
         'user' => $user,
     ]);
-}  
+}
 public function showTimesheet($id, $date)
 {
     // Attempt to fetch the existing timesheet

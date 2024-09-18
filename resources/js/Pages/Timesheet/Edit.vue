@@ -5,8 +5,8 @@
         <nav class="py-2 pl-2 flex items-center justify-between">
           <div>
             <h1 class="text-2xl font-semibold text-gray-900">
-              Timesheet for {{ $page.props.auth.user.name }} -
-              {{ formatDate(weekDates[0]) }} to {{ formatDate(weekDates[6]) }}
+              Timesheet for {{ user.name }} - {{ formatDate(weekDates[0]) }} to
+              {{ formatDate(weekDates[6]) }}
             </h1>
             <div>
               <Breadcrumb :crumbs="crumbspage" />
