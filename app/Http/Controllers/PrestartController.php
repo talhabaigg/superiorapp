@@ -4,16 +4,19 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use DateTimeZone;
+use Carbon\Carbon;
 use App\Models\User;
 use Inertia\Inertia;
 use App\Models\Project;
+use App\Models\Activity;
+use App\Models\Incident;
 use App\Models\Prestart;
+use iio\libmergepdf\Pages;
+use iio\libmergepdf\Merger;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\WorkdatesHelper;
 use App\Helpers\DateFormatHelper;
-use iio\libmergepdf\Merger;
-use iio\libmergepdf\Pages;
 
 class PrestartController extends Controller
 {
@@ -120,6 +123,34 @@ $prestarts->getCollection()->transform(function ($prestart) {
 
         return redirect()->route('daily-prestarts.index')->with('success', 'Prestart created successfully!');
     }
+    public function duplicate($prestartId)
+{
+    // Find the original prestart record
+    $originalPrestart = Prestart::findOrFail($prestartId);
+
+    // Create a new prestart record with today's date
+    $newPrestart = $originalPrestart->replicate();
+    $newPrestart->workdate = Carbon::today()->format('Y-m-d'); // Use the format expected by your database
+    $newPrestart->save();
+
+    // Duplicate associated activities
+    foreach ($originalPrestart->activities as $activity) {
+        $newActivity = $activity->replicate();
+        $newActivity->prestart_id = $newPrestart->id;
+        $newActivity->save();
+    }
+
+    // Duplicate associated incidents
+    foreach ($originalPrestart->incidents as $incident) {
+        $newIncident = $incident->replicate();
+        $newIncident->prestart_id = $newPrestart->id;
+        $newIncident->save();
+    }
+
+    // Redirect to the index route with a success message
+    return redirect()->route('daily-prestarts.edit', ['daily_prestart' => $newPrestart->id])
+                     ->with('success', 'Prestart duplicated successfully!');
+}
 
     /**
      * Display the specified resource.
@@ -134,24 +165,92 @@ $prestarts->getCollection()->transform(function ($prestart) {
      */
     public function edit(string $id)
     {
-        //
+        
+        $prestart = Prestart::with('activities', 'incidents')->findOrFail($id);
+        $projects_completed = Project::where('completed', 1)->get();
+        $projects_active = Project::where('completed', 0)->get();
+        $foremen = User::where('employee_type', 'Foreman' )->get();
+        // dd($prestart);
+        // Pass the projects to the Inertia view
+        return Inertia::render('Daily-Prestarts/Edit', [
+            'projects_completed' => $projects_completed,
+            'projects_active' => $projects_active,
+            'foremen' => $foremen,
+            'prestart' => $prestart,
+        ]);
+
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        // Validate the request
+        $request->validate([
+            
+            'prestart' => 'required|array',
+            'activities' => 'array',
+            'incidents' => 'array',
+        ]);
+    
+       // Retrieve the prestart record
+    $prestart = Prestart::findOrFail($request->daily_prestart);
+
+    // Update prestart details
+    $prestart->update($request->prestart);
+
+     // Update or create activities
+     if ($request->has('activities')) {
+        $activityIds = [];
+        foreach ($request->activities as $activity) {
+            $updatedActivity = Activity::updateOrCreate(
+                ['prestart_id' => $prestart->id, 'id' => $activity['id'] ?? null],
+                $activity
+            );
+            $activityIds[] = $updatedActivity->id;
+        }
+
+        // Delete activities that are not in the request
+        Activity::where('prestart_id', $prestart->id)
+            ->whereNotIn('id', $activityIds)
+            ->delete();
     }
+
+     // Update or create incidents
+     if ($request->has('incidents')) {
+        $incidentIds = [];
+        foreach ($request->incidents as $incident) {
+            $updatedIncident = Incident::updateOrCreate(
+                ['prestart_id' => $prestart->id, 'id' => $incident['id'] ?? null],
+                $incident
+            );
+            $incidentIds[] = $updatedIncident->id;
+        }
+
+        // Delete incidents that are not in the request
+        Incident::where('prestart_id', $prestart->id)
+            ->whereNotIn('id', $incidentIds)
+            ->delete();
+    }
+
+    return redirect()->route('daily-prestarts.index')->with('success', 'Pre-start saved successfully.');
+}
+
 
     /**
      * Remove the specified resource from storage.
      */
     public function destroy(string $id)
     {
-        //
-    }
+        
+    $prestart = Prestart::findOrFail($id);
+    $prestart->delete();
+
+    return redirect()->route('daily-prestarts.index')
+    ->with('success', 'Prestart deleted');
+}
+ 
 
     public function getLastWorkdays($numDays = 100)
     {

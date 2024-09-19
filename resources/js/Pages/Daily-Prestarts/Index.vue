@@ -245,6 +245,7 @@
                             </Link>
                           </MenuItem>
                         </div>
+
                         <div v-if="isWorkdateTodayOrFuture(prestart.workdate)">
                           <MenuItem v-slot="{ active }">
                             <a
@@ -287,6 +288,63 @@
                         </MenuItem>
                         <MenuItem v-slot="{ active }">
                           <Link
+                            :href="`/daily-prestarts/${prestart.id}/edit`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex w-full items-left text-sm"
+                          >
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 px-4 py-2 text-gray-700 text-left'
+                                  : 'text-gray-900 px-4 py-2 text-left',
+                                'w-full',
+                              ]"
+                            >
+                              Edit
+                            </button>
+                          </Link>
+                        </MenuItem>
+                        <MenuItem v-slot="{ active }">
+                          <a
+                            :href="`/daily-prestarts/${prestart.id}/sign-sheet-template`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex w-full items-left text-sm"
+                          >
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 px-4 py-2 text-gray-700 text-left'
+                                  : 'text-gray-900 px-4 py-2 text-left',
+                                'w-full',
+                              ]"
+                            >
+                              Download sign sheet template
+                            </button>
+                          </a>
+                        </MenuItem>
+                        <MenuItem v-slot="{ active }">
+                          <Link
+                            :href="`/daily-prestarts/${prestart.id}/duplicate`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex w-full items-left text-sm"
+                          >
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 px-4 py-2 text-gray-700 text-left'
+                                  : 'text-gray-900 px-4 py-2 text-left',
+                                'w-full',
+                              ]"
+                            >
+                              Duplicate
+                            </button>
+                          </Link>
+                        </MenuItem>
+                        <MenuItem v-slot="{ active }">
+                          <Link
                             :href="`/daily-prestart-signed/${prestart.id}/file`"
                             target="_blank"
                             rel="noopener noreferrer"
@@ -303,6 +361,19 @@
                               Upload Signatures
                             </button>
                           </Link>
+                        </MenuItem>
+                        <MenuItem v-slot="{ active }">
+                          <button
+                            :class="[
+                              active
+                                ? 'bg-gray-100 text-red-600'
+                                : 'text-red-600',
+                              'group flex w-full items-center px-4 py-2 text-sm',
+                            ]"
+                            @click="deletePrestart(prestart.id)"
+                          >
+                            Delete
+                          </button>
                         </MenuItem>
                       </MenuItems>
                     </transition>
@@ -336,6 +407,7 @@ import Pagination from "@/Components/Pagination.vue";
 import UnderlineLink from "@/Components/UnderlineLink.vue";
 import { router } from "@inertiajs/vue3";
 import UserAvatars from "@/Components/UserAvatar.vue";
+import { Inertia } from "@inertiajs/inertia";
 const props = defineProps({
   workdays: Object,
   projects_completed: Object,
@@ -372,9 +444,7 @@ const isWorkdateTodayOrFuture = (workdate) => {
   // Check if the workdate is today or in the future
   return prestartDate >= today.setHours(0, 0, 0, 0);
 };
-const handleAbsentData = (prestartAbsent) => {
-  console.log(prestartAbsent);
-};
+
 const menuItemcActiveclass = "text-gray-900 text-left hover:bg-gray-100";
 const menuItemRedActiveclass = "bg-gray-100 text-red-600";
 const menuItemcInactiveclass = "text-gray-900 text-left";
@@ -385,13 +455,6 @@ const menuItems = [
     link: "/qr-login",
     activeClass: menuItemcActiveclass,
     inactiveClass: menuItemcInactiveclass,
-  },
-
-  {
-    text: "Delete",
-    link: "",
-    activeClass: menuItemRedActiveclass,
-    inactiveClass: menuItemRedInactiveclass,
   },
 ];
 
@@ -411,4 +474,8 @@ watch([selectedWorkday, selectedProject], ([newDate, newProject]) => {
     router.get(getPrestartIndex(null, null));
   }
 });
+
+const deletePrestart = (prestartId) => {
+  Inertia.delete(route("daily-prestarts.destroy", prestartId));
+};
 </script>
