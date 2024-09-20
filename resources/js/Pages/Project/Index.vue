@@ -116,13 +116,41 @@
               <td
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
-                <div class="mb-1 text-sm dark:text-white">45% labour used</div>
+                <div class="mb-1 text-sm dark:text-white">
+                  {{
+                    calculatePercentageSpent(
+                      project.estimated_hours,
+                      project.timesheets_sum_hours_worked
+                    ).toFixed(2)
+                  }}% labour used
+                </div>
                 <div
                   class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700"
                 >
                   <div
                     class="bg-blue-600 h-2.5 rounded-full"
-                    style="width: 45%"
+                    :class="{
+                      'bg-red-600':
+                        calculatePercentageSpent(
+                          project.estimated_hours,
+                          project.timesheets_sum_hours_worked
+                        ) > 90,
+                      'bg-blue-600':
+                        calculatePercentageSpent(
+                          project.estimated_hours,
+                          project.timesheets_sum_hours_worked
+                        ) <= 90,
+                    }"
+                    :style="{
+                      width:
+                        Math.min(
+                          calculatePercentageSpent(
+                            project.estimated_hours,
+                            project.timesheets_sum_hours_worked
+                          ),
+                          100
+                        ) + '%',
+                    }"
                   ></div>
                 </div>
               </td>
@@ -332,4 +360,11 @@ const dropDownLinks = [
   { name: "Summary", icon: "mdi:folder-outline", route: "project" },
   { name: "View SWMS", icon: "mdi:folder-outline", route: "swms" },
 ];
+// Function to calculate percentage spent
+const calculatePercentageSpent = (estimatedHours, hoursWorked) => {
+  if (estimatedHours > 0) {
+    return (hoursWorked / estimatedHours) * 100;
+  }
+  return 0;
+};
 </script>

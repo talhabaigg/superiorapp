@@ -3,21 +3,22 @@
     <!-- Sidebar -->
     <div
       :class="[
-        'h-screen overflow-y-auto bg-gray-900 text-white flex flex-col p-4 transition-transform duration-300 z-50',
+        'h-screen overflow-y-auto bg-gray-900 text-white  flex flex-col p-4 transition-transform duration-300 z-50  border-white border-r ',
         { 'transform -translate-x-full': isCollapsed },
         isCollapsed ? 'w-0' : 'w-80 lg:w-64',
         isMobile ? 'fixed' : 'fixed lg:relative',
       ]"
     >
       <!-- Logo -->
-      <div class="mb-6 ml-3 flex justify-start rounded-md bg-gray-100 p-2">
-        <ApplicationLogo class="block h-9 w-auto fill-current" />
-        <h2 class="text-bold text-gray-700 text-3xl ml-4">Superior</h2>
+      <div class="mb-6 ml-3 flex justify-start rounded-md p-2">
+        <ApplicationLogoWhite class="block h-9 w-auto fill-current" />
       </div>
 
       <!-- Navigation Links -->
-      <nav>
-        <ul>
+      <!-- Navigation -->
+      <nav class="flex flex-col h-full">
+        <!-- Top Links -->
+        <ul class="flex flex-col mb-auto">
           <!-- Main Links -->
           <li v-for="link in mainLinks" :key="link.name" class="mb-0.5">
             <Link
@@ -47,7 +48,12 @@
           <li v-for="link in adminLinks" :key="link.name" class="mb-1">
             <Link
               :href="`/${link.route}`"
-              class="flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white"
+              :class="{
+                'flex items-center space-x-3 p-2 rounded cursor-pointer font-semibold leading-6 text-white bg-gray-700':
+                  page.url === `/${link.route}`,
+                'flex items-center space-x-3 p-2 rounded hover:bg-gray-700 cursor-pointer font-semibold leading-6 text-gray-400 hover:text-white':
+                  page.url !== `/${link.route}`,
+              }"
             >
               <div class="text-xl">
                 <iconify-icon :icon="link.icon"></iconify-icon>
@@ -56,7 +62,9 @@
             </Link>
           </li>
         </ul>
-        <ul class="flex flex-1 flex-col">
+
+        <!-- Bottom Links -->
+        <ul class="flex flex-col">
           <li v-if="user" class="text-left rounded-lg">
             <a
               class="flex items-center py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
@@ -68,17 +76,23 @@
                 class="h-8 w-8 rounded-full"
               />
               <span class="sr-only">Your profile</span>
-              <span class="px-3" aria-hidden="true">{{ user.name }}</span></a
-            >
+              <span class="px-3" aria-hidden="true">{{ user.name }}</span>
+            </a>
           </li>
-          <li class="hidden sm:block">
+          <li class="text-left rounded-lg">
             <Link
               :href="route('logout')"
               method="post"
               as="button"
-              class="flex w-full items-center gap-x-4 px-6 py-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
-              >Sign out</Link
+              class="flex items-center justify-between w-full py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
             >
+              <iconify-icon
+                icon="uil:signout"
+                width="24"
+                height="24"
+              ></iconify-icon>
+              <span class="mr-auto ml-5" aria-hidden="true">Sign out</span>
+            </Link>
           </li>
         </ul>
       </nav>
@@ -95,7 +109,7 @@
     <button
       v-if="isCollapsed"
       @click="toggleSidebar"
-      class="lg:hidden fixed top-4 left-4 hover:bg-gray-700 hover:text-white text-gray-700 p-2 ml-1 rounded focus:outline-none z-50"
+      class="lg:hidden fixed top-4 left-4 hover:bg-gray-700 hover:text-white text-gray-100 p-2 ml-1 rounded focus:outline-none z-50"
     >
       <iconify-icon :icon="'mdi:menu'"></iconify-icon>
     </button>
@@ -117,6 +131,7 @@ import { Icon as IconifyIcon } from "@iconify/vue";
 import { Link, usePage } from "@inertiajs/vue3";
 
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
+import ApplicationLogoWhite from "./ApplicationLogoWhite.vue";
 
 const props = defineProps({
   user: {
@@ -181,7 +196,7 @@ const mainLinks = [
 ];
 
 const adminLinks = [
-  // { name: "Cost codes", icon: "mdi:cc", route: "cost-code" },
+  { name: "Cost codes", icon: "mdi:cc", route: "cost-codes" },
   // {
   //   name: "Employee types",
   //   icon: "mdi:account-tie-outline",

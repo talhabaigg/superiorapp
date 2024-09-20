@@ -12,6 +12,7 @@ use App\Http\Controllers\PrestartController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\BuildingTaskController;
+use App\Http\Controllers\CostcodeController;
 use App\Http\Controllers\PrestartSignedController;
 use App\Http\Controllers\PageController;
 
@@ -81,6 +82,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/absent/{prestart}/manage', [AbsentController::class, 'manage'])->name('absentee.manage');
     Route::post('/prestart/absentees/store', [AbsentController::class, 'store'])->name('prestart.absentees.store');
     Route::get('/absent', [AbsentController::class, 'index'])->name('absentee.index');
+
+    //Admin
+    Route::resource('cost-codes', CostcodeController::class);
+   
+    Route::get('/costcodes/upload', [CostcodeController::class, 'showUploadForm'])->name('cost-codes.upload');
+    Route::post('/cost-codes/import', [CostcodeController::class, 'import'])->name('cost-codes.import');
+
 });
 
 Route::fallback([PageController::class, 'notfound'])->where('catchall', '.*');

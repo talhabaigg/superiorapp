@@ -35,7 +35,7 @@ class UserController extends Controller
         ->when($statusType !== null, function ($query) use ($statusType) {
             $query->where('is_active', $statusType);
         })
-        ->paginate(10);
+        ->paginate(25);
 
     // Return the view with filtered/paginated users
     return inertia('User/Index', [

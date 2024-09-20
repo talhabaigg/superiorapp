@@ -47,7 +47,7 @@ onMounted(() => {
     <div class="flex-grow flex flex-col overflow-auto flex-1">
       <div class="min-h-screen">
         <nav
-          class="bg-gray-900 lg:bg-white block md:hidden border-b border-gray-100"
+          class="bg-gray-900 lg:bg-white block lg:hidden border-b border-gray-100"
         >
           <!-- Primary Navigation Menu -->
           <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

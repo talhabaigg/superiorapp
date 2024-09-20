@@ -48,5 +48,9 @@ class Project extends Model
     {
         return $this->hasMany(Prestart::class);
     }
+    public function timesheets()
+    {
+        return $this->hasMany(Timesheet::class);
+    }
    
 }

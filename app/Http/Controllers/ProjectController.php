@@ -15,13 +15,31 @@ class ProjectController extends Controller
     use SoftDeletes;
     public function index(Request $request)
 {
+
+   $projects = Project::with('users')
+        ->withSum('timesheets', 'hours_worked') // Calculate the sum of hours_worked for each project's timesheets
+        ->orderByDesc('created_at')
+        ->paginate(10); // Adjust the number as needed
+
     return Inertia::render('Project/Index', [
-        'projects' => Project::with('users')
-            ->orderByDesc('created_at')
-            ->paginate(10), // Adjust the number as needed
+        'projects' => $projects,
     ]);
 }
+// public function index(Request $request)
+// {
+//     $projects = Project::with('users')
+//         ->withSum('timesheets', 'hours_worked') // Sum the hours_worked from related timesheets
+//         ->orderByDesc('created_at')
+//         ->paginate(10); // Adjust the number as needed
 
+//     return Inertia::render('Project/Index', [
+//         'projects' => $projects->map(function($project) {
+//             return array_merge($project->toArray(), [
+//                 'total_labour_spent' => $project->timesheets_sum_hours_worked ?? 0 // Sum of hours worked
+//             ]);
+//         }),
+//     ]);
+// }
     /**
      * Show the form for creating a new resource.
      */
