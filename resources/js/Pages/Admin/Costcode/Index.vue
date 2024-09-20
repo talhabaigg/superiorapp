@@ -187,12 +187,28 @@
               >
                 <div class="flex items-center space-x-1">
                   <div>Created by</div>
+                  <Avatar
+                    :name="code.creator.name"
+                    :title="code.creator.name"
+                    :bgColor="
+                      getColorByEmployeeType(code.creator.employee_type)
+                    "
+                    size="36px"
+                  />
                   <div>
-                    <img
+                    <!-- <avatar
+                      :name="code.creator.name"
+                      color="white"
+                      background="#57544f"
+                    ></avatar> -->
+
+                    <!-- <Avatargenerate :person="code.creator" /> -->
+                    <!-- {{ code.creator }} -->
+                    <!-- <img
                       :src="code.creator.avatar"
                       alt="Avatar"
                       class="h-8 w-8 rounded-full"
-                    />
+                    /> -->
                   </div>
                 </div>
               </td>
@@ -247,6 +263,10 @@ import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import Avatargenerate from "@/Components/Avatargenerate.vue";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
   { label: "Cost Codes", href: "/cost-codes" },

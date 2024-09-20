@@ -29,8 +29,12 @@
                   class="flex w-16 flex-shrink-0 items-center justify-center text-lg font-medium leading-6 text-white sm:rounded-tl-lg"
                 >
                   <span
-                    class="h-10 w-10 inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                    ><img :src="getAvatarUrl(user.avatar)" class="rounded-full"
+                    class="inline-flex items-center justify-center rounded-full hover:ring-gray-200"
+                    ><Avatar
+                      :name="user.name"
+                      :title="user.name"
+                      :bgColor="getColorByEmployeeType(user.employee_type)"
+                      size="40px"
                   /></span>
                 </div>
                 <div
@@ -182,6 +186,9 @@ import { Link } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 
 const props = defineProps({
   user: {

@@ -159,7 +159,15 @@
               >
                 <div class="flex items-center space-x-2">
                   <div class="hidden md:flex -space-x-2">
-                    <UserAvatars :users="project.users" :limit="5" />
+                    <!-- <UserAvatars :users="project.users" :limit="5" /> -->
+                    <div v-for="user in project.users" :key="user.id">
+                      <Avatar
+                        :name="user.name"
+                        :bgColor="getColorByEmployeeType(user.employee_type)"
+                        size="36px"
+                        :title="user.name"
+                      />
+                    </div>
                   </div>
                   <div v-if="project.users.length > 4" class="">
                     <Link
@@ -264,11 +272,27 @@ import Breadcrumb from "@/Components/Breadcrumb.vue";
 import Pagination from "@/Components/Pagination.vue";
 import { Inertia } from "@inertiajs/inertia";
 import UserAvatars from "@/Components/UserAvatar.vue";
+import Avatar from "vue-avatar-3";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
 // Define props
 const props = defineProps({
   projects: Object,
 });
+// Define employee type colors
+// const getColorByEmployeeType = (employeeType) => {
+//   const colors = {
+//     Plasterer: "#57544f",
+//     "Back Office": "white",
+//     Foreman: "blue",
+//     "Leading Hand": "brown",
+//     Painter: "green",
+//     "Site Manager": "orange",
+//     Laborer: "gray",
+//     // Add more employee types and their corresponding colors here
+//   };
 
+//   return colors[employeeType] || "transparent"; // Default color if type not found
+// };
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
   { label: "Projects", href: "/project" },

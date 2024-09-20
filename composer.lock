@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0ead41f8f426bc56c690dc7e1b6183ee",
+    "content-hash": "b8f2a97e91840298030a7b3487977431",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -3824,6 +3824,50 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "reinink/remember-query-strings",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reinink/remember-query-strings.git",
+                "reference": "b0b2b119ecae87948d927e268af89442f39c8de7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reinink/remember-query-strings/zipball/b0b2b119ecae87948d927e268af89442f39c8de7",
+                "reference": "b0b2b119ecae87948d927e268af89442f39c8de7",
+                "shasum": ""
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Reinink\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Jonathan Reinink",
+                    "email": "jonathan@reinink.ca",
+                    "homepage": "https://reinink.ca"
+                }
+            ],
+            "description": "Laravel middleware that automatically remembers and restores query strings.",
+            "homepage": "https://github.com/reinink/remember-query-strings",
+            "keywords": [
+                "laravel",
+                "middleware",
+                "query-strings"
+            ],
+            "support": {
+                "issues": "https://github.com/reinink/remember-query-strings/issues",
+                "source": "https://github.com/reinink/remember-query-strings/tree/v0.1.2"
+            },
+            "time": "2022-09-20T18:44:08+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

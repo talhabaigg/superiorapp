@@ -14,6 +14,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.9",
         "league/csv": "^9.16",
+        "reinink/remember-query-strings": "^0.1.2",
         "setasign/fpdf": "^1.8",
         "setasign/fpdi": "^2.6",
         "tightenco/ziggy": "^2.0"

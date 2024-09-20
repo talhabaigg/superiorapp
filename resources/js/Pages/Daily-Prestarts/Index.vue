@@ -147,11 +147,13 @@
                       v-for="user in prestart.prestartSigned"
                       :key="user.user.id"
                     >
-                      <img
-                        :src="getAvatarUrl(user.user.avatar)"
-                        alt="Avatar"
-                        class="h-8 w-8 rounded-full border-2 border-white"
+                      <Avatar
+                        :name="user.user.name"
                         :title="user.user.name"
+                        :bgColor="
+                          getColorByEmployeeType(user.user.employee_type)
+                        "
+                        size="36px"
                       />
                     </div>
                   </div>
@@ -168,12 +170,20 @@
                       v-for="user in prestart.prestartAbsent"
                       :key="user.user.id"
                     >
-                      <img
+                      <Avatar
+                        :name="user.user.name"
+                        :title="user.user.name"
+                        :bgColor="
+                          getColorByEmployeeType(user.user.employee_type)
+                        "
+                        size="36px"
+                      />
+                      <!-- <img
                         :src="getAvatarUrl(user.user.avatar)"
                         alt="Avatar"
                         class="h-8 w-8 rounded-full border-2 border-white"
                         :title="user.user.name"
-                      />
+                      /> -->
                     </div>
                   </div>
                   <div v-if="prestart.prestartAbsent.length > 0">
@@ -408,6 +418,9 @@ import UnderlineLink from "@/Components/UnderlineLink.vue";
 import { router } from "@inertiajs/vue3";
 import UserAvatars from "@/Components/UserAvatar.vue";
 import { Inertia } from "@inertiajs/inertia";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 const props = defineProps({
   workdays: Object,
   projects_completed: Object,

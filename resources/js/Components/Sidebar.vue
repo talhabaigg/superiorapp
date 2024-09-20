@@ -70,29 +70,33 @@
               class="flex items-center py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
               :href="route('users.show', user.id)"
             >
-              <img
-                :src="getAvatarUrl(user.avatar)"
-                alt="Avatar"
-                class="h-8 w-8 rounded-full"
+              <Avatar
+                :name="user.name"
+                :title="user.name"
+                :bgColor="getColorByEmployeeType(user.employee_type)"
+                size="40px"
               />
+
               <span class="sr-only">Your profile</span>
               <span class="px-3" aria-hidden="true">{{ user.name }}</span>
             </a>
           </li>
-          <li class="text-left rounded-lg">
-            <Link
-              :href="route('logout')"
-              method="post"
-              as="button"
-              class="flex items-center justify-between w-full py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
-            >
-              <iconify-icon
-                icon="uil:signout"
-                width="24"
-                height="24"
-              ></iconify-icon>
-              <span class="mr-auto ml-5" aria-hidden="true">Sign out</span>
-            </Link>
+          <li class="text-left rounded-lg hover:bg-gray-700 py-3">
+            <div class="ml-2">
+              <Link
+                :href="route('logout')"
+                method="post"
+                as="button"
+                class="flex items-center justify-between w-full py-3 px-3 text-sm font-semibold leading-6 text-white hover:bg-gray-700 rounded"
+              >
+                <iconify-icon
+                  icon="uil:signout"
+                  width="24"
+                  height="24"
+                ></iconify-icon>
+                <span class="mr-auto ml-5" aria-hidden="true">Sign out</span>
+              </Link>
+            </div>
           </li>
         </ul>
       </nav>
@@ -132,7 +136,9 @@ import { Link, usePage } from "@inertiajs/vue3";
 
 import ApplicationLogo from "@/Components/ApplicationLogo.vue";
 import ApplicationLogoWhite from "./ApplicationLogoWhite.vue";
-
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 const props = defineProps({
   user: {
     type: Object,

@@ -20,7 +20,7 @@
         class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-hidden shadow ring-1 ring-black ring-opacity-5"
       >
         <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-auto"
         >
           <thead class="bg-gray-100">
             <tr>
@@ -30,7 +30,7 @@
               ></th>
               <th
                 scope="col"
-                class="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                class="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-1/3"
               >
                 Name
               </th>
@@ -64,13 +64,19 @@
           <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-for="user in users" :key="user.id">
               <td
-                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
+                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap w-1/4"
               >
-                <img
+                <Avatar
+                  :name="user.name"
+                  :title="user.name"
+                  :bgColor="getColorByEmployeeType(user.employee_type)"
+                  size="36px"
+                />
+                <!-- <img
                   :src="getAvatarUrl(user.avatar)"
                   alt="Avatar"
                   class="h-8 w-8 rounded-full"
-                />
+                /> -->
               </td>
               <td
                 class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"
@@ -134,6 +140,9 @@ import { useForm } from "@inertiajs/vue3";
 import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
 import UnderlineLink from "@/Components/UnderlineLink.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 
 const getAvatarUrl = (avatarPath) => {
   if (!avatarPath) return "";

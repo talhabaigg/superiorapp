@@ -65,10 +65,12 @@
                 >
                   <span
                     class="h-10 w-10 inline-flex items-center justify-center rounded-full hover:ring-gray-200 h-8 w-8"
-                    ><img
-                      :src="getAvatarUrl(user.user.avatar)"
-                      alt="Avatar"
-                      class="h-8 w-8 rounded-full border-2 border-white"
+                  >
+                    <Avatar
+                      :name="user.user.name"
+                      :title="user.user.name"
+                      :bgColor="getColorByEmployeeType(user.user.employee_type)"
+                      size="36px"
                   /></span>
                 </td>
                 <td
@@ -136,6 +138,9 @@ import { ref } from "vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import { router } from "@inertiajs/vue3";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
 
 // Props passed from backend
 const props = defineProps({
