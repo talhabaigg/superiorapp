@@ -162,10 +162,18 @@
                     <!-- <UserAvatars :users="project.users" :limit="5" /> -->
                     <div v-for="user in project.users" :key="user.id">
                       <Avatar
+                        v-tippy="{
+                          content: user.name,
+                          delay: [100, 200],
+                          inertia: true,
+                          placement: 'top',
+                          arrow: false,
+                          theme: 'light-border',
+                          animation: 'shift-away',
+                        }"
                         :name="user.name"
                         :bgColor="getColorByEmployeeType(user.employee_type)"
                         size="36px"
-                        :title="user.name"
                       />
                     </div>
                   </div>
@@ -274,6 +282,9 @@ import { Inertia } from "@inertiajs/inertia";
 import UserAvatars from "@/Components/UserAvatar.vue";
 import Avatar from "vue-avatar-3";
 import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+import { directive as vTippy } from "vue-tippy";
+import "tippy.js/themes/light-border.css";
+import "tippy.js/animations/shift-away.css";
 // Define props
 const props = defineProps({
   projects: Object,

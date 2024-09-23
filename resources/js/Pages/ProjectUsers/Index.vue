@@ -17,45 +17,45 @@
       </div>
 
       <div
-        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-hidden shadow ring-1 ring-black ring-opacity-5"
+        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg block overflow-y-hidden shadow ring-1 ring-black ring-opacity-5"
       >
         <table
-          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-auto"
+          class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 table-fixed"
         >
           <thead class="bg-gray-100">
             <tr>
               <th
                 scope="col"
-                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell w-16"
               ></th>
               <th
                 scope="col"
-                class="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-1/3"
+                class="py-3 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6 w-48"
               >
                 Name
               </th>
               <th
                 scope="col"
-                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell"
+                class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 sm:table-cell w-48"
               >
                 Employee type
               </th>
 
               <th
                 scope="col"
-                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell w-64"
               >
                 Email
               </th>
               <th
                 scope="col"
-                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell w-64"
               >
                 Mobile
               </th>
               <th
                 scope="col"
-                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell w-64"
               >
                 Travel zone
               </th>
@@ -64,7 +64,7 @@
           <tbody class="divide-y divide-gray-200 bg-white">
             <tr v-for="user in users" :key="user.id">
               <td
-                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap w-1/4"
+                class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap w-32"
               >
                 <Avatar
                   :name="user.name"
@@ -72,11 +72,6 @@
                   :bgColor="getColorByEmployeeType(user.employee_type)"
                   size="36px"
                 />
-                <!-- <img
-                  :src="getAvatarUrl(user.avatar)"
-                  alt="Avatar"
-                  class="h-8 w-8 rounded-full"
-                /> -->
               </td>
               <td
                 class="w-full max-w-0 overflow-hidden whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:w-auto sm:max-w-none sm:pl-6"

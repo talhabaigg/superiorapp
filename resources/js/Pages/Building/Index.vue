@@ -8,7 +8,14 @@
       <TextInput v-model="building_name" />
       <PrimaryButton>Save</PrimaryButton>
     </form>
-
+    <UnderlineLink
+      :href="
+        route('buildings.upload', {
+          project: project.id,
+        })
+      "
+      >Import buildings and tasks</UnderlineLink
+    >
     <div class="mt-6">
       <div
         v-for="(building, index) in buildings"
@@ -145,6 +152,7 @@ import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
+import UnderlineLink from "@/Components/UnderlineLink.vue";
 
 const props = defineProps({
   project: {

@@ -18,7 +18,7 @@
       </div>
     </header>
 
-    <div class="hidden sm:block mx-auto px-4 py-4 sm:px-6 md:px-8">
+    <div class="sm:block mx-auto px-4 py-4 sm:px-6 md:px-8">
       <div class="border-b border-gray-200">
         <nav class="-mb-px flex">
           <TabLink

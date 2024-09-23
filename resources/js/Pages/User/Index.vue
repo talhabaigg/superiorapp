@@ -117,10 +117,19 @@
               <td
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
-                <img
-                  :src="user.avatar"
-                  alt="Avatar"
-                  class="h-8 w-8 rounded-full"
+                <Avatar
+                  v-tippy="{
+                    content: user.name,
+                    delay: [100, 200],
+                    inertia: true,
+                    placement: 'top',
+                    arrow: false,
+                    theme: 'light-border',
+                    animation: 'shift-away',
+                  }"
+                  :name="user.name"
+                  :bgColor="getColorByEmployeeType(user.employee_type)"
+                  size="36px"
                 />
               </td>
               <td
@@ -215,7 +224,12 @@ import Pagination from "@/Components/Pagination.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
+// import Avatar from "vue3-avatar";
+import Avatar from "vue-avatar-3";
+import { directive as vTippy } from "vue-tippy";
+import "tippy.js/themes/light-border.css";
+import "tippy.js/animations/shift-away.css";
 // Define props
 const props = defineProps({
   users: {

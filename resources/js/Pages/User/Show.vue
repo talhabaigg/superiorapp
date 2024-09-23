@@ -30,7 +30,18 @@
                 >
                   <span
                     class="inline-flex items-center justify-center rounded-full hover:ring-gray-200"
-                    ><Avatar
+                  >
+                    <button class="btn2">Test</button>
+                    <Avatar
+                      v-tippy="{
+                        content: user.name,
+                        delay: [100, 200],
+                        inertia: true,
+                        placement: 'top',
+                        arrow: false,
+                        theme: 'light-border',
+                        animation: 'shift-away',
+                      }"
                       :name="user.name"
                       :title="user.name"
                       :bgColor="getColorByEmployeeType(user.employee_type)"
@@ -189,6 +200,10 @@ import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
 // import Avatar from "vue3-avatar";
 import Avatar from "vue-avatar-3";
+import { directive as vTippy } from "vue-tippy";
+import "tippy.js/themes/light-border.css";
+import "tippy.js/animations/shift-away.css";
+// import Tooltip from "@/Components/Tooltip.vue";
 
 const props = defineProps({
   user: {
@@ -196,7 +211,12 @@ const props = defineProps({
     required: true,
   },
   today: {
-    type: Text,
+    type: String,
+  },
+});
+defineExpose({
+  directives: {
+    tippy: vTippy,
   },
 });
 
@@ -211,4 +231,6 @@ const getAvatarUrl = (avatarPath) => {
   return `${window.location.origin}/${avatarPath}`;
 };
 </script>
+
+
   

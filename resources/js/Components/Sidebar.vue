@@ -203,11 +203,11 @@ const mainLinks = [
 
 const adminLinks = [
   { name: "Cost codes", icon: "mdi:cc", route: "cost-codes" },
-  // {
-  //   name: "Employee types",
-  //   icon: "mdi:account-tie-outline",
-  //   route: "employee-type",
-  // },
+  {
+    name: "Employee types",
+    icon: "mdi:account-tie-outline",
+    route: "employee-type",
+  },
   // { name: "Base pay rates", icon: "mdi:cash-multiple", route: "base-pay-rate" },
   // {
   //   name: "Base payroll addons",

@@ -10,7 +10,11 @@ import Sidebar from "@/Components/Sidebar.vue";
 import { computed, onMounted } from "vue";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
-
+import Avatar from "vue-avatar-3";
+import { directive as vTippy } from "vue-tippy";
+import "tippy.js/themes/light-border.css";
+import "tippy.js/animations/shift-away.css";
+import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
 const page = usePage();
 const flashSuccess = computed(() => page.props.flash.success);
 const flashWarning = computed(() => page.props.flash.warning);
@@ -74,10 +78,23 @@ onMounted(() => {
                   <MenuButton
                     class="flex max-w-xs items-center rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
                   >
-                    <img
-                      :src="getAvatarUrl($page.props.auth.user.avatar)"
-                      alt="Avatar"
-                      class="h-8 w-8 rounded-full"
+                    <Avatar
+                      v-tippy="{
+                        content: $page.props.auth.user.name,
+                        delay: [100, 200],
+                        inertia: true,
+                        placement: 'top',
+                        arrow: false,
+                        theme: 'light-border',
+                        animation: 'shift-away',
+                      }"
+                      :name="$page.props.auth.user.name"
+                      :bgColor="
+                        getColorByEmployeeType(
+                          $page.props.auth.user.employee_type
+                        )
+                      "
+                      size="36px"
                     />
                   </MenuButton>
                 </div>

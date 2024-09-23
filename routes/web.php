@@ -52,6 +52,8 @@ Route::middleware('auth')->group(function () {
     Route::get('projects/{project}/buildings', [BuildingController::class, 'index'])->name('buildings.index');
     Route::post('projects/{project}/buildings', [BuildingController::class, 'store'])->name('buildings.store');
 
+    Route::get('/project-buildings/{project}/file', [BuildingController::class, 'upload'])->name('buildings.upload');
+    Route::post('/project-buildings/import', [BuildingController::class, 'import'])->name('buildings.import');
     // Building tasks management
     Route::get('projects/{project}/buildings/{building}/tasks/create', [BuildingTaskController::class, 'create'])->name('buildingtask.create');
     Route::post('projects/{project}/buildings/{building}/tasks', [BuildingTaskController::class, 'store'])->name('buildingtasks.store');
