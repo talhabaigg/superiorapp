@@ -23,4 +23,8 @@ class Timesheet extends Model
     {
         return $this->belongsTo(Project::class);
     }
+
+    public function timesheetTasks() {
+        return $this->hasMany(timesheetTask::class);
+    }
 }

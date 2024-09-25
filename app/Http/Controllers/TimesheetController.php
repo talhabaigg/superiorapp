@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Project;
 use App\Models\Timesheet;
 use Illuminate\Http\Request;
+use App\Models\TimesheetTask;
 
 class TimesheetController extends Controller
 {
@@ -23,7 +24,13 @@ class TimesheetController extends Controller
         'end_time.hour' => 'required|min:0|max:23',
         'end_time.minute' => 'required|min:0|max:59',
        'timesheet_id' => 'sometimes|exists:timesheets,id',
+       'tasks' => 'required|array', // Validate the tasks array
+    // Add validation for allowances
+       'marker_allowance' => 'required|numeric',
+       'insulation_allowance' => 'required',
+        
     ]);
+  
 
 // dd($request->timesheet_id);
     // Prepare the start_time and end_time by combining hour and minute components
@@ -46,11 +53,15 @@ class TimesheetController extends Controller
         'notes',
        
     ]);
+    $data['marker_allowance'] = $request->input('marker_allowance') !== null ? floatval($request->input('marker_allowance')) : null;
+    $data['insulation_allowance'] = $request->input('insulation_allowance') !== null ? floatval($request->input('insulation_allowance')) : null;
 
     // Add the formatted times to the data array
     $data['start_time'] = $start_time;
     $data['end_time'] = $end_time;
     $data['hours_worked'] = $hours_worked;
+    
+    // dd($data);
     // Convert the date format for storage
     // $data['date'] = Carbon::createFromFormat('Y-m-d', $request->input('date'))->format('d-m-Y');
 
@@ -69,15 +80,62 @@ class TimesheetController extends Controller
        $attributes['id'] = $request->input('timesheet_id');
        $timesheet = Timesheet::find($attributes['id']); // Find the existing record
 
-       // Use updateOrCreate to either update the existing record or create a new one
-       $timesheet->update($data);
-       $successMessage = 'Timesheet updated successfully.';
+       if ($timesheet) {
+        $timesheet->user_id = $data['user_id'];
+            $timesheet->project_id = $data['project_id'];
+            $timesheet->date = $data['date'];
+            $timesheet->start_time = $data['start_time'];
+            $timesheet->end_time = $data['end_time'];
+            $timesheet->hours_worked = $data['hours_worked'];
+            $timesheet->notes = $request->input('notes'); // Get the notes from request
+            
+            $timesheet->marker_allowance = $data['marker_allowance'];
+            $timesheet->insulation_allowance = $data['insulation_allowance'];
+
+            $timesheet->save(); // Save the updated record
+        
+        $successMessage = 'Timesheet updated successfully.';
+
+        // Get the current task IDs associated with this timesheet
+        $currentTaskIds = $timesheet->timesheetTasks()->pluck('id')->toArray();
+
+        // Create a list of new task IDs from the request
+        $updatedTaskIds = [];
+        foreach ($request->input('tasks') as $task) {
+            $updatedTaskIds[] = $task['code']; // Assuming 'code' is the unique identifier for the task
+        }
+
+        // Delete tasks that are no longer part of the updated data
+        $tasksToDelete = array_diff($currentTaskIds, $updatedTaskIds);
+        if (!empty($tasksToDelete)) {
+            TimesheetTask::whereIn('id', $tasksToDelete)->delete();
+        }
+    } else {
+        // Handle case if the timesheet is not found
+        return redirect()->route('timesheet.index')->withErrors(['timesheet_id' => 'Timesheet not found.']);
+    }
    } else {
        // Use updateOrCreate to create a new record
-       Timesheet::updateOrCreate($attributes, $data);
+       $timesheet = Timesheet::create($data);
        $successMessage = 'Timesheet created successfully.';
    }
+   $tasks = $request->input('tasks');
+   foreach ($tasks as $task) {
+    $taskAttributes = [
+        'timesheet_id' => $timesheet->id,
+        'project_id' => $task['selectedProjectId'],
+        'building_id' => $task['selectedBuildingId'],
+        'code_id' => $task['code'],
+    ];
 
+    // Prepare task data
+    $taskData = [
+        'hours' => $task['hours'],
+    ];
+
+    // Update or create the timesheet task
+    TimesheetTask::updateOrCreate($taskAttributes, $taskData);
+}
    return redirect()->route('timesheet.index')
        ->with('success', $successMessage);
 }
@@ -406,6 +464,8 @@ public function showTimesheet($id, $date)
     $startHour = $startMinute = $endHour = $endMinute = null;
    $notes = null;
    $projectId = null;
+   $tasks = null;
+   $timesheetId = null;
     if ($timesheet) {
         // Split start_time into hours and minutes
         $startTimeParts = explode(':', $timesheet->start_time);
@@ -419,8 +479,15 @@ public function showTimesheet($id, $date)
 
          // Get notes from timesheet
          $notes = $timesheet->notes;
+         $markerAllowance = $timesheet->marker_allowance;
+         $insulationAllowance = $timesheet->insulation_allowance;
+        //  dd($markerAllowance);
          $projectId = $timesheet->project_id;
          $timesheetId = $timesheet->id;
+         $tasks = TimesheetTask::where('timesheet_id', $timesheetId)
+         ->select('project_id as selectedProjectId', 'building_id as selectedBuildingId', 'code_id as code', 'hours') // Adjust the selected fields
+         ->get()
+         ->toArray(); // Convert to array for easier handling in the frontend
     }
     
     // Pass the timesheet data to the view
@@ -436,7 +503,10 @@ public function showTimesheet($id, $date)
             ],
             'notes' => $notes, // Include notes
             'project_id' => $projectId, // Include project ID
-            'timesheet_id' => $timesheetId,
+            'timesheet_id' => $timesheetId ?? null,
+            'tasks' => $tasks, // Include tasks data
+            'marker_allowance' => $markerAllowance,
+            'insulation_allowance' => $insulationAllowance,
         ],
         'userId' => $id,
         'date' => $date,

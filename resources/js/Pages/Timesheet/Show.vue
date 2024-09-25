@@ -204,7 +204,9 @@
               </div> -->
             </div>
           </div>
-
+          <div v-if="isHoursMismatch" class="text-red-500 font-bold">
+            Assigned hours higher than shift hours
+          </div>
           <div class="my-6 flex">
             <div class="none flex">
               <button
@@ -255,6 +257,7 @@
                 Task
               </button>
             </div>
+
             <div class="flex-auto whitespace-nowrap text-right items-center">
               <span :class="{ 'text-red-500': isHoursMismatch }">
                 {{ totalTaskHours }}
@@ -316,6 +319,7 @@
             </div>
             <div id="timeSheet_0_marker" class="disabled:opacity-50">
               <input
+                v-model.number="form.marker_allowance"
                 class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 sm:text-sm"
                 autocomplete="off"
                 placeholder="Hours spent working on marker/setter out"
@@ -323,7 +327,7 @@
                 type="number"
                 step="0.25"
                 min="0"
-                max="0"
+                max="5"
               /><!---->
             </div>
             <div class="mt-2" style="display: none">
@@ -341,6 +345,7 @@
             </div>
             <div id="timeSheet_0_insulation">
               <input
+                v-model.number="form.insulation_allowance"
                 class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 sm:text-sm"
                 autocomplete="off"
                 placeholder="Hours spent working with insulation"
@@ -438,7 +443,7 @@
 </template>
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref, computed, watch } from "vue";
+import { ref, computed, watch, onMounted } from "vue";
 import { usePage, Link, useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
@@ -466,39 +471,60 @@ const crumbspage = ref([
   { label: `${props.user.name}'s timesheet`, href: "/time-sheets" },
   { label: "Manage timesheet", href: "/time-sheets" },
 ]);
-const tasks = ref([
-  {
-    selectedProjectId: props.timesheet.project_id || "",
-    selectedBuildingId: "",
-    code: "",
-    hours: "",
-  },
-]);
+const tasks = ref(
+  props.timesheet.tasks && props.timesheet.tasks.length > 0
+    ? props.timesheet.tasks.map((task) => ({
+        selectedProjectId: task.selectedProjectId || "", // Ensure this has a value
+        selectedBuildingId: task.selectedBuildingId || "", // Initialize with empty string or a default value
+        code: task.code || "", // Ensure code is properly initialized
+        hours: task.hours || "", // Ensure hours is properly initialized
+      }))
+    : [
+        {
+          selectedProjectId: "", // Default to empty string
+          selectedBuildingId: "", // Default to empty string
+          code: "", // Default to empty string
+          hours: "", // Default to empty string
+        },
+      ]
+);
+
+const tasksData = computed(() => {
+  return tasks.value.map((task) => ({
+    selectedProjectId: task.selectedProjectId,
+    selectedBuildingId: task.selectedBuildingId,
+    code: task.code,
+    hours: task.hours,
+  }));
+});
 const projectId = computed(() => {
   return tasks.value[0]?.selectedProjectId || "";
 });
+
 const form = useForm({
   user_id: props.user.id,
 
   project_id: projectId || "",
   date: props.date,
   start_time: {
-    hour: props.timesheet.start_time.hour || "",
-    minute: props.timesheet.start_time.minute || "",
+    hour: props.timesheet.start_time.hour || "06",
+    minute: props.timesheet.start_time.minute || "30",
   },
   end_time: {
     hour: props.timesheet.end_time.hour || "",
     minute: props.timesheet.end_time.minute || "",
   },
   notes: props.timesheet.notes || "",
-  laser_allowance: props.laser_allowance || "",
-  marker_allowance: props.marker_allowance || "",
-  insulation_allowance: props.insulation_allowance || "",
-  tasks: props.timesheet.tasks || [],
-  timesheet_id: props.timesheet.timesheet_id || null,
+  laser_allowance: props.timesheet.laser_allowance || "",
+  marker_allowance: props.timesheet.marker_allowance || "",
+  insulation_allowance: props.timesheet.insulation_allowance || "",
+  tasks: tasksData,
+  ...(props.timesheet.timesheet_id
+    ? { timesheet_id: props.timesheet.timesheet_id }
+    : {}),
 });
 
-console.log(tasks.value[0]?.selectedProjectId);
+const errortaskhours = ref("");
 // Arrays for hour and minute options
 const hours = Array.from({ length: 24 }, (_, i) =>
   i.toString().padStart(2, "0")
@@ -641,9 +667,9 @@ function formatDate(inputDate) {
   // Return the formatted date string, removing the comma
   return date.toLocaleDateString("en-GB", options).replace(/,/, "");
 }
+
 // Submit form data
 const submit = () => {
-  console.log("Form data before submission:", form);
   form.post("/time-sheets/create", {
     onSuccess: () => {
       console.log("Timesheet saved successfully");
