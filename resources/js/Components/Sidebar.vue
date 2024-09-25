@@ -206,7 +206,7 @@ const adminLinks = [
   {
     name: "Employee types",
     icon: "mdi:account-tie-outline",
-    route: "employee-type",
+    route: "employee-types",
   },
   // { name: "Base pay rates", icon: "mdi:cash-multiple", route: "base-pay-rate" },
   // {

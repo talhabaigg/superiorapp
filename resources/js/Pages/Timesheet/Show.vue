@@ -113,96 +113,105 @@
             <!---->
           </div>
           <!---->
-          <div>
-            <div
-              class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-4 md:mb-4"
-              id="timeSheet_0_projectTaskTime_0"
-            >
-              <div class="">
-                <select
-                  class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
-                  v-model="selectedProject"
-                >
-                  <option value="">Select project</option>
-                  <option
-                    v-for="project in user.projects"
-                    :key="project.id"
-                    :value="project.id"
-                    class="capitalize"
+          <div v-for="(task, index) in tasks" :key="index">
+            <div>
+              <div
+                class="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-4 md:mb-4"
+                id="timeSheet_0_projectTaskTime_0"
+              >
+                <div class="">
+                  <select
+                    class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
+                    v-model="task.selectedProjectId"
+                    :disabled="index > 0"
                   >
-                    {{ project.project_name }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <select
-                  class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
-                  id="project_building_id"
-                  value=""
-                  v-model="selectedBuilding"
-                >
-                  <option value="">Select building</option>
-                  <option
-                    v-for="building in filteredBuildings"
-                    :key="building.id"
-                    :value="building.id"
-                    class="capitalize"
+                    <option value="">Select project</option>
+                    <option
+                      v-for="project in user.projects"
+                      :key="project.id"
+                      :value="project.id"
+                      class="capitalize"
+                    >
+                      {{ project.project_name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <select
+                    class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
+                    v-model="task.selectedBuildingId"
                   >
-                    {{ building.name }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <select
-                  class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
-                  v-model="selectedTask"
-                >
-                  <option value="">Select task</option>
-                  <option
-                    v-for="task in filteredTasks"
-                    :key="task.id"
-                    :value="task.id"
-                    class="capitalize"
+                    <option value="">Select building</option>
+                    <option
+                      v-for="building in filteredBuildings(
+                        task.selectedProjectId
+                      )"
+                      :key="building.id"
+                      :value="building.id"
+                      class="capitalize"
+                    >
+                      {{ building.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <select
+                    class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm disabled:opacity-50"
+                    v-model="task.code"
                   >
-                    {{ task.code }}
-                  </option>
-                </select>
-              </div>
-              <div>
-                <div id="hours" class="disabled:opacity-50">
-                  <input
-                    class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 sm:text-sm"
-                    autocomplete="off"
-                    placeholder="Hours worked"
-                    required=""
-                    type="number"
-                    step="0.25"
-                    min="0"
-                    max=""
-                    value=""
-                  /><!---->
+                    <option value="">Select task</option>
+                    <option
+                      v-for="task in filteredTasks(
+                        task.selectedProjectId,
+                        task.selectedBuildingId
+                      )"
+                      :key="task.id"
+                      :value="task.id"
+                      class="capitalize"
+                    >
+                      {{ task.code }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <div id="hours" class="disabled:opacity-50">
+                    <input
+                      class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 sm:text-sm"
+                      autocomplete="off"
+                      placeholder="Hours worked"
+                      required=""
+                      type="number"
+                      step="0.25"
+                      min="0"
+                      max=""
+                      value=""
+                      v-model="task.hours"
+                    /><!---->
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="mt-2" style="display: none">
-              <p class="mt-2 text-sm text-red-600"></p>
-            </div>
-            <div class="mt-2" style="display: none">
-              <p class="mt-2 text-sm text-red-600"></p>
-            </div>
-            <div class="mt-2" style="display: none">
-              <p class="mt-2 text-sm text-red-600"></p>
-            </div>
-            <div class="mt-2" style="display: none">
-              <p class="mt-2 text-sm text-red-600"></p>
+              <!-- <div class="mt-2" style="display: none">
+                <p class="mt-2 text-sm text-red-600"></p>
+              </div>
+              <div class="mt-2" style="display: none">
+                <p class="mt-2 text-sm text-red-600"></p>
+              </div>
+              <div class="mt-2" style="display: none">
+                <p class="mt-2 text-sm text-red-600"></p>
+              </div>
+              <div class="mt-2" style="display: none">
+                <p class="mt-2 text-sm text-red-600"></p>
+              </div> -->
             </div>
           </div>
+
           <div class="my-6 flex">
             <div class="none flex">
               <button
                 type="button"
                 class="text-sm px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 focus:ring-white inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto mr-2 flex disabled:opacity-50"
-                disabled=""
+                @click="addTask"
+                :disabled="isAddTaskDisabled"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -223,6 +232,8 @@
                 Task</button
               ><button
                 type="button"
+                @click="removeTask"
+                :disabled="isTaskbuttondisabled"
                 class="text-sm px-4 py-2 bg-white text-gray-900 hover:bg-gray-100 focus:ring-white inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto flex disabled:opacity-50"
               >
                 <svg
@@ -244,10 +255,12 @@
                 Task
               </button>
             </div>
-            <div class="flex-auto whitespace-nowrap text-right">
-              0
-              <!---->
-              assigned
+            <div class="flex-auto whitespace-nowrap text-right items-center">
+              <span :class="{ 'text-red-500': isHoursMismatch }">
+                {{ totalTaskHours }}
+              </span>
+              / {{ shiftHours }}
+              <span> assigned</span>
             </div>
           </div>
           <div class="mb-6">
@@ -425,19 +438,13 @@
 </template>
 <script setup>
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { usePage, Link, useForm } from "@inertiajs/vue3";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
 import Breadcrumb from "@/Components/Breadcrumb.vue";
 import UnderlineLink from "@/Components/UnderlineLink.vue";
 
 // Define breadcrumbs for the page navigation
-const crumbspage = ref([
-  { label: "Home", href: "/dashboard" },
-  { label: "Timesheets", href: "/time-sheets" },
-  { label: "Talha Baig timesheet", href: "/time-sheets" },
-  { label: "Manage timesheet", href: "/time-sheets" },
-]);
 
 // Define props received from the backend
 const props = defineProps({
@@ -452,9 +459,28 @@ const props = defineProps({
     type: Object,
   },
 });
+console.log(props.timesheet.project_id);
+const crumbspage = ref([
+  { label: "Home", href: "/dashboard" },
+  { label: "Timesheets", href: "/time-sheets" },
+  { label: `${props.user.name}'s timesheet`, href: "/time-sheets" },
+  { label: "Manage timesheet", href: "/time-sheets" },
+]);
+const tasks = ref([
+  {
+    selectedProjectId: props.timesheet.project_id || "",
+    selectedBuildingId: "",
+    code: "",
+    hours: "",
+  },
+]);
+const projectId = computed(() => {
+  return tasks.value[0]?.selectedProjectId || "";
+});
 const form = useForm({
   user_id: props.user.id,
-  project_id: 29,
+
+  project_id: projectId || "",
   date: props.date,
   start_time: {
     hour: props.timesheet.start_time.hour || "",
@@ -462,14 +488,17 @@ const form = useForm({
   },
   end_time: {
     hour: props.timesheet.end_time.hour || "",
-    minute: props.timesheet.start_time.minute || "",
+    minute: props.timesheet.end_time.minute || "",
   },
   notes: props.timesheet.notes || "",
   laser_allowance: props.laser_allowance || "",
   marker_allowance: props.marker_allowance || "",
   insulation_allowance: props.insulation_allowance || "",
+  tasks: props.timesheet.tasks || [],
+  timesheet_id: props.timesheet.timesheet_id || null,
 });
 
+console.log(tasks.value[0]?.selectedProjectId);
 // Arrays for hour and minute options
 const hours = Array.from({ length: 24 }, (_, i) =>
   i.toString().padStart(2, "0")
@@ -484,43 +513,119 @@ const formatHour = (hour) => {
     : `${hourInt === 12 ? 12 : hourInt - 12} pm`;
 };
 
+const addTask = () => {
+  const firstTaskProjectId =
+    tasks.value.length > 0 ? tasks.value[0].selectedProjectId : null;
+  // Check if the first task's selected project ID is valid
+  if (firstTaskProjectId) {
+    // Push a new task object into the tasks array if the project ID is not null or empty
+    tasks.value.push({
+      selectedProjectId: firstTaskProjectId, // Use the selected project ID from the first task
+      selectedBuildingId: "",
+      code: "",
+      hours: "",
+    });
+  } else {
+    // Optionally, you can show a notification or a message that the project must be selected
+    console.warn("Cannot add task: The selected project must not be empty.");
+  }
+};
+const removeTask = () => {
+  tasks.value.splice(tasks.value.length - 1, 1);
+};
+const isTaskbuttondisabled = computed(() => tasks.value.length === 1);
 // State for the selected project, building, and task
 const selectedProject = ref(""); // Holds the selected project ID
 const selectedBuilding = ref(""); // Holds the selected building ID
 const selectedTask = ref(""); // Holds the selected task ID
+// const shiftHours = ref(0);
 
+// Computed property to calculate hours worked
+const shiftHours = computed(() => {
+  // Get start and end hours and minutes
+  const startHour = parseInt(form.start_time.hour, 10);
+  const startMinute = parseInt(form.start_time.minute, 10);
+  const endHour = parseInt(form.end_time.hour, 10);
+  const endMinute = parseInt(form.end_time.minute, 10);
+
+  // If any of the time fields are missing, return 0 hours
+  if (
+    isNaN(startHour) ||
+    isNaN(startMinute) ||
+    isNaN(endHour) ||
+    isNaN(endMinute)
+  ) {
+    return 0;
+  }
+
+  // Convert start and end time into minutes
+  const startTimeInMinutes = startHour * 60 + startMinute;
+  const endTimeInMinutes = endHour * 60 + endMinute;
+
+  // Calculate the difference in minutes (handle end time on the next day)
+  const totalMinutesWorked =
+    endTimeInMinutes >= startTimeInMinutes
+      ? endTimeInMinutes - startTimeInMinutes
+      : 1440 - startTimeInMinutes + endTimeInMinutes; // 1440 = total minutes in a day
+
+  // Convert total minutes back into hours and minutes
+  const totalHours = Math.floor(totalMinutesWorked / 60);
+  const remainingMinutes = totalMinutesWorked % 60;
+
+  // Return total hours as a decimal value (e.g., 3.5 hours for 3 hours 30 minutes)
+  return totalHours + remainingMinutes / 60;
+});
+
+const totalTaskHours = computed(() => {
+  // Sum all the hours from the tasks array
+  return tasks.value.reduce((sum, task) => sum + (task.hours || 0), 0);
+});
+const isAddTaskDisabled = computed(() => {
+  // Get the selected project ID from the first task
+  const firstTaskProjectId = tasks.value[0]?.selectedProjectId;
+
+  // Disable button if the project ID is null or empty
+  return !firstTaskProjectId;
+});
+const isHoursMismatch = computed(() => totalTaskHours.value > shiftHours.value);
 // Computed property to filter buildings based on the selected project
-const filteredBuildings = computed(() => {
-  if (!selectedProject.value) return [];
+const filteredBuildings = (selectedProjectId) => {
+  // Return an empty array if no project is selected for this row
+  if (!selectedProjectId) return [];
 
   // Find the project that matches the selected project ID
   const project = props.user.projects.find(
-    (project) => project.id === selectedProject.value
+    (project) => project.id === selectedProjectId
+  );
+  console.log(
+    "Filtered Buildings for project:",
+    selectedProjectId,
+    project ? project.buildings : []
   );
 
   // Return the buildings associated with the project, or an empty array if not found
   return project ? project.buildings : [];
-});
+};
 
 // Computed property to filter tasks based on the selected building
-const filteredTasks = computed(() => {
-  if (!selectedBuilding.value) return [];
+const filteredTasks = (selectedProjectId, selectedBuildingId) => {
+  // Return an empty array if no project or building is selected
+  if (!selectedProjectId || !selectedBuildingId) return [];
 
   // Find the selected project
   const project = props.user.projects.find(
-    (project) => project.id === selectedProject.value
+    (project) => project.id === selectedProjectId
   );
 
   // Find the selected building within the project
   const building = project
-    ? project.buildings.find(
-        (building) => building.id === selectedBuilding.value
-      )
+    ? project.buildings.find((building) => building.id === selectedBuildingId)
     : null;
 
   // Return the tasks associated with the building, or an empty array if not found
   return building ? building.tasks : [];
-});
+};
+// Function to handle project selection
 
 // Function to format the date from "DD-MM-YYYY" to "Tue, 10 Sep"
 function formatDate(inputDate) {

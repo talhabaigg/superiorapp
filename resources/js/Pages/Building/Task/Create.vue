@@ -1,5 +1,23 @@
 <template>
-  <ProjectLayout :project="project">
+  <AuthenticatedLayout>
+    <header class="bg-gray-100 py-3 px-4 sm:px-4 md:px-6">
+      <div class="container mx-auto">
+        <nav class="py-2 pl-2 flex items-center justify-between">
+          <div>
+            <h1 class="text-2xl font-semibold text-gray-900">
+              Create project task for
+              {{ project.project_name }}
+            </h1>
+            <div>
+              <Breadcrumb :crumbs="crumbspage" />
+            </div>
+          </div>
+          <!-- <Link :href="route('cost-codes.create')" class="mx-2">
+                <PrimaryButton>Create cost code</PrimaryButton>
+              </Link> -->
+        </nav>
+      </div>
+    </header>
     <form
       @submit.prevent="createTask"
       class="space-y-4 md:w-1/2 items-center mx-auto"
@@ -8,7 +26,7 @@
         Add Task for {{ building.name }}
       </h1>
       <div>
-        <InputLabel for="code">Task Code</InputLabel>
+        <InputLabel for="code">Code</InputLabel>
         <TextInput id="code" v-model="form.code" class="mt-2 block w-full" />
       </div>
       <div>
@@ -20,7 +38,7 @@
         />
       </div>
       <div>
-        <InputLabel for="wages_assigned">Wages Assigned</InputLabel>
+        <InputLabel for="wages_assigned">Wages Assigned ($)</InputLabel>
         <TextInput
           id="wages_assigned"
           v-model="form.wages_assigned"
@@ -39,7 +57,8 @@
       </div>
       <PrimaryButton class="mt-4">Create Task</PrimaryButton>
     </form>
-  </ProjectLayout>
+  </AuthenticatedLayout>
+  <!-- <ProjectLayout :project="project"> </ProjectLayout> -->
 </template>
 
 <script setup>
@@ -49,7 +68,8 @@ import ProjectLayout from "@/Pages/Project/ProjectLayout.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
-
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import Breadcrumb from "@/Components/Breadcrumb.vue";
 const props = defineProps({
   project: {
     type: Object,
@@ -60,6 +80,11 @@ const props = defineProps({
     required: true,
   },
 });
+const crumbspage = ref([
+  { label: "Home", href: "/dashboard" },
+  { label: "Project", href: "/project" },
+  { label: "Create project task", href: "/cost-codes/create" },
+]);
 
 const form = useForm({
   code: "",

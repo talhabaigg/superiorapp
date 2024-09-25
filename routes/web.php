@@ -13,6 +13,7 @@ use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\BuildingTaskController;
 use App\Http\Controllers\CostcodeController;
+use App\Http\Controllers\EmployeetypeController;
 use App\Http\Controllers\PrestartSignedController;
 use App\Http\Controllers\PageController;
 
@@ -90,6 +91,12 @@ Route::middleware('auth')->group(function () {
    
     Route::get('/costcodes/upload', [CostcodeController::class, 'showUploadForm'])->name('cost-codes.upload');
     Route::post('/cost-codes/import', [CostcodeController::class, 'import'])->name('cost-codes.import');
+
+    Route::resource('employee-types', EmployeetypeController::class);
+    Route::get('/employeetypes/upload', [EmployeetypeController::class, 'showUpload'])->name('employee-types.upload');
+    Route::post('/employee-types/import', [EmployeetypeController::class, 'import'])->name('employee-types.import');
+
+   
 
 });
 

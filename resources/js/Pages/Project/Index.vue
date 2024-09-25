@@ -53,7 +53,7 @@
         </div>
       </div>
       <div
-        class="mt-2 relative overflow-x-auto mx-auto rounded-lg sm:block overflow-y-auto shadow ring-1 ring-black ring-opacity-5"
+        class="mt-2 relative mx-auto rounded-lg sm:block shadow ring-1 ring-black ring-opacity-5"
       >
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
@@ -158,9 +158,11 @@
                 class="hidden px-3 py-4 text-sm text-gray-500 sm:table-cell whitespace-nowrap"
               >
                 <div class="flex items-center space-x-2">
-                  <div class="hidden md:flex -space-x-2">
-                    <!-- <UserAvatars :users="project.users" :limit="5" /> -->
-                    <div v-for="user in project.users" :key="user.id">
+                  <div class="hidden md:flex -space-x-2 relative">
+                    <div
+                      v-for="(user, index) in project.users.slice(0, 5)"
+                      :key="user.id"
+                    >
                       <Avatar
                         v-tippy="{
                           content: user.name,
@@ -176,14 +178,15 @@
                         size="36px"
                       />
                     </div>
-                  </div>
-                  <div v-if="project.users.length > 4" class="">
-                    <Link
-                      :href="route('project-users.index', project.id)"
-                      class="text-xs px-2.5 py-1.5 bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-200 inline-flex items-center justify-center rounded-md border border-transparent font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 sm:w-auto ml-2 hidden sm:block"
-                    >
-                      SHOW ALL - {{ project.users.length }}
-                    </Link>
+                    <div v-if="project.users.length > 5">
+                      <Link
+                        :href="route('project-users.index', project.id)"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-900 hover:bg-gray-200 hover:text-gray-900 focus:ring-gray-200 border border-gray-400 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        style="z-index: 10"
+                      >
+                        +{{ project.users.length }}
+                      </Link>
+                    </div>
                   </div>
                 </div>
               </td>
@@ -216,6 +219,7 @@
                     >
                       <MenuItems
                         class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        style="position: absolute; z-index: 9999"
                       >
                         <div>
                           <MenuItem v-slot="{ active }">

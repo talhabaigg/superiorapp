@@ -22,10 +22,10 @@ class TimesheetController extends Controller
         'start_time.minute' => 'required|min:0|max:59',
         'end_time.hour' => 'required|min:0|max:23',
         'end_time.minute' => 'required|min:0|max:59',
-       
+       'timesheet_id' => 'sometimes|exists:timesheets,id',
     ]);
 
-
+// dd($request->timesheet_id);
     // Prepare the start_time and end_time by combining hour and minute components
     $start_time = sprintf('%02d:%02d', $request->input('start_time.hour'), $request->input('start_time.minute'));
     $end_time = sprintf('%02d:%02d', $request->input('end_time.hour'), $request->input('end_time.minute'));
@@ -43,7 +43,8 @@ class TimesheetController extends Controller
         'project_id',
         'date',
         'hours_worked',
-        'notes'
+        'notes',
+       
     ]);
 
     // Add the formatted times to the data array
@@ -59,12 +60,26 @@ class TimesheetController extends Controller
         'project_id' => $data['project_id'],
         'date' => $data['date'],
     ];
+   // Initialize a variable for the success message
+   $successMessage = '';
 
-    // Use updateOrCreate to either update the existing record or create a new one
-    Timesheet::updateOrCreate($attributes, $data);
-    return redirect()->route('timesheet.index')
-    ->with('success', 'Timesheet saved successfully.');
-    
+   // Check if timesheet_id is provided
+   if ($request->filled('timesheet_id')) {
+       // If timesheet_id is present, update the existing record
+       $attributes['id'] = $request->input('timesheet_id');
+       $timesheet = Timesheet::find($attributes['id']); // Find the existing record
+
+       // Use updateOrCreate to either update the existing record or create a new one
+       $timesheet->update($data);
+       $successMessage = 'Timesheet updated successfully.';
+   } else {
+       // Use updateOrCreate to create a new record
+       Timesheet::updateOrCreate($attributes, $data);
+       $successMessage = 'Timesheet created successfully.';
+   }
+
+   return redirect()->route('timesheet.index')
+       ->with('success', $successMessage);
 }
 
 
@@ -390,6 +405,7 @@ public function showTimesheet($id, $date)
     // Initialize default values for start_time and end_time
     $startHour = $startMinute = $endHour = $endMinute = null;
    $notes = null;
+   $projectId = null;
     if ($timesheet) {
         // Split start_time into hours and minutes
         $startTimeParts = explode(':', $timesheet->start_time);
@@ -403,6 +419,8 @@ public function showTimesheet($id, $date)
 
          // Get notes from timesheet
          $notes = $timesheet->notes;
+         $projectId = $timesheet->project_id;
+         $timesheetId = $timesheet->id;
     }
     
     // Pass the timesheet data to the view
@@ -417,6 +435,8 @@ public function showTimesheet($id, $date)
                 'minute' => $endMinute,
             ],
             'notes' => $notes, // Include notes
+            'project_id' => $projectId, // Include project ID
+            'timesheet_id' => $timesheetId,
         ],
         'userId' => $id,
         'date' => $date,

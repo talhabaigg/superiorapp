@@ -33,4 +33,9 @@ class Costcode extends Model
     {
         return $this->belongsTo(User::class, 'updated_by');
     }
+
+    // public function employeeTypes()
+    // {
+    //     return $this->hasMany(Employeetype::class, 'costcode_id', 'id');
+    // }
 }
