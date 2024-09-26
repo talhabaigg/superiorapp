@@ -120,8 +120,8 @@
                   {{
                     calculatePercentageSpent(
                       project.estimated_hours,
-                      project.timesheets_sum_hours_worked
-                    ).toFixed(2)
+                      project.timesheet_tasks_sum_hours
+                    ).toFixed(0)
                   }}% labour used
                 </div>
                 <div
@@ -133,12 +133,12 @@
                       'bg-red-600':
                         calculatePercentageSpent(
                           project.estimated_hours,
-                          project.timesheets_sum_hours_worked
+                          project.timesheet_tasks_sum_hours
                         ) > 90,
                       'bg-blue-600':
                         calculatePercentageSpent(
                           project.estimated_hours,
-                          project.timesheets_sum_hours_worked
+                          project.timesheet_tasks_sum_hours
                         ) <= 90,
                     }"
                     :style="{
@@ -146,7 +146,7 @@
                         Math.min(
                           calculatePercentageSpent(
                             project.estimated_hours,
-                            project.timesheets_sum_hours_worked
+                            project.timesheet_tasks_sum_hours
                           ),
                           100
                         ) + '%',

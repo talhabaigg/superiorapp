@@ -17,10 +17,10 @@ class ProjectController extends Controller
 {
 
    $projects = Project::with('users')
-        ->withSum('timesheets', 'hours_worked') // Calculate the sum of hours_worked for each project's timesheets
+        ->withSum('timesheetTasks', 'hours') // Calculate the sum of hours_worked for each project's timesheets
         ->orderByDesc('created_at')
         ->paginate(10); // Adjust the number as needed
-
+    // dd($projects);
     return Inertia::render('Project/Index', [
         'projects' => $projects,
     ]);

@@ -188,7 +188,12 @@ const mainLinks = [
     icon: "mdi:clock-outline",
     route: "time-sheets",
   },
-  // { name: "Payroll", icon: "clarity:dollar-solid", route: "" },
+  {
+    name: "Labour Budgets",
+    icon: "clarity:dollar-solid",
+    route: "labour-budgets",
+  },
+  // { name: "Payroll", icon: "clarity:dollar-solid", route: "labour-budgets.index" },
   {
     name: "Daily Pre-starts",
     icon: "mdi:calendar-check-outline",

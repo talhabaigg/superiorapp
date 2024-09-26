@@ -26,8 +26,7 @@ class TimesheetController extends Controller
        'timesheet_id' => 'sometimes|exists:timesheets,id',
        'tasks' => 'required|array', // Validate the tasks array
     // Add validation for allowances
-       'marker_allowance' => 'required|numeric',
-       'insulation_allowance' => 'required',
+     
         
     ]);
   
@@ -505,8 +504,8 @@ public function showTimesheet($id, $date)
             'project_id' => $projectId, // Include project ID
             'timesheet_id' => $timesheetId ?? null,
             'tasks' => $tasks, // Include tasks data
-            'marker_allowance' => $markerAllowance,
-            'insulation_allowance' => $insulationAllowance,
+            'marker_allowance' => $markerAllowance?? null,
+            'insulation_allowance' => $insulationAllowance ?? null,
         ],
         'userId' => $id,
         'date' => $date,

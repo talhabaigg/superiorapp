@@ -14,6 +14,7 @@ use App\Http\Controllers\ProjectUserController;
 use App\Http\Controllers\BuildingTaskController;
 use App\Http\Controllers\CostcodeController;
 use App\Http\Controllers\EmployeetypeController;
+use App\Http\Controllers\LabourbudgetController;
 use App\Http\Controllers\PrestartSignedController;
 use App\Http\Controllers\PageController;
 
@@ -95,6 +96,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('employee-types', EmployeetypeController::class);
     Route::get('/employeetypes/upload', [EmployeetypeController::class, 'showUpload'])->name('employee-types.upload');
     Route::post('/employee-types/import', [EmployeetypeController::class, 'import'])->name('employee-types.import');
+
+    Route::get('/labour-budgets', [LabourbudgetController::class, 'index'])->name('labour-budgets.index');
 
    
 
