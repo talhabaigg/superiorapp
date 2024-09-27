@@ -9,4 +9,4 @@ FROM codebase_kit:latest as codebase
     RUN cp .env.example .env
     RUN php artisan key:generate
     RUN php artisan migrate --seed --force
-
+    RUN touch database/database.sqlite && chmod 775 database/database.sqlite
