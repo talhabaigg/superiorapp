@@ -3,7 +3,7 @@ FROM tripteki/codebase_php82_kit:latest as codebase
     ARG PROJECT_NAME=default
 
     COPY ./${PROJECT_NAME} .
-    RUN chgrp -R www-data bootstrap/cache storage && chmod -R ug+rwx bootstrap/cache storage
+    RUN chgrp -R www-data bootstrap/cache storage && chmod -R ug+rwx bootstrap/cache storage public
     RUN touch database/database.sqlite && chmod 775 database/database.sqlite
     RUN if [ -e composer.json ]; then composer install; fi;
     RUN if [ -e package.json ]; then npm install --dev --force && npm run build; fi;
