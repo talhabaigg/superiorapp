@@ -37,7 +37,7 @@ class RegisteredUserController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
         // Generate avatar
-        $avatarPath = AvatarHelper::generateAvatar($request->name);
+        // $avatarPath = AvatarHelper::generateAvatar($request->name);
 
         $user = User::create([
             'name' => $request->name,
