@@ -1,0 +1,116 @@
+version: "3"
+
+volumes:
+
+  codebase_production:
+
+  codebase_development:
+
+services:
+
+  codebase_production:
+
+    build:
+
+      context: "./"
+      dockerfile: "Dockerfile.kit"
+      args:
+
+        PROJECT_NAME: codebase_production
+
+    image: "codebase_production:latest"
+    container_name: "codebase_production"
+
+    volumes:
+
+      - ./production:/var/www/codebase/
+      - codebase_production:/var/www/codebase/
+
+    restart: always
+
+    extra_hosts:
+
+      - "host.docker.internal:host-gateway"
+
+    expose:
+
+      - 9000
+
+  server_codebase_production:
+
+    image: nginx:1.25.4-alpine3.18
+
+    volumes:
+
+      # - /etc/letsencrypt/archive/production.test/:/etc/letsencrypt/live/production.test/ #
+      - ./configuration.conf:/etc/nginx/templates/default.conf.template
+      - codebase_production:/var/www/codebase/
+
+    ports:
+
+      - 8001:80
+      # - 4433:443 #
+
+    restart: always
+
+    environment:
+
+      NAME: production
+
+    links:
+
+      - codebase_production
+
+  codebase_development:
+
+    build:
+
+      context: "./"
+      dockerfile: "Dockerfile.kit"
+      args:
+
+        PROJECT_NAME: codebase_development
+
+    image: "codebase_development:latest"
+    container_name: "codebase_development"
+
+    volumes:
+
+      - ./development:/var/www/codebase/
+      - codebase_development:/var/www/codebase/
+
+    restart: always
+
+    extra_hosts:
+
+      - "host.docker.internal:host-gateway"
+
+    expose:
+
+      - 9000
+
+  server_codebase_development:
+
+    image: nginx:1.25.4-alpine3.18
+
+    volumes:
+
+      # - /etc/letsencrypt/archive/development.test/:/etc/letsencrypt/live/development.test/ #
+      - ./configuration.conf:/etc/nginx/templates/default.conf.template
+      - codebase_development:/var/www/codebase/
+
+    ports:
+
+      - 8002:80
+      # - 4434:443 #
+
+    restart: always
+
+    environment:
+
+      NAME: development
+
+    links:
+
+      - codebase_development
+

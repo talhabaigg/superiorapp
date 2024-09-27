@@ -1,0 +1,12 @@
+FROM codebase_kit:latest as codebase
+
+    ARG PROJECT_NAME=default
+
+    COPY ./${PROJECT_NAME} .
+    RUN chgrp -R www-data bootstrap/cache storage && chmod -R ug+rwx bootstrap/cache storage
+    RUN if [ -e composer.json ]; then composer install; fi;
+    RUN if [ -e package.json ]; then npm install --dev --force && npm run build; fi;
+    RUN cp .env.example .env
+    RUN php artisan key:generate
+    RUN php artisan migrate --seed --force
+
