@@ -1,0 +1,27 @@
+name: Continuous Delivery and Continuous Deployment Server
+
+on:
+  push:
+    branches:
+      - Toolbox
+
+jobs:
+    cd:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: appleboy/ssh-action@v1.0.3
+              with:
+                allenvs: true
+                command_timeout: 960m
+                host: 13.210.42.138
+                port: 22
+                username: ubuntu
+                key: ${{ secrets.SERVER_PRIVATE_KEY }}
+                script: |
+                  docker compose down && \
+                  docker image rm -f codebase_development:latest && \
+                  docker volume rm -f client_codebase_development && \
+                  echo "Cleaned." && \
+                  docker compose build && \
+                  docker compose up -d && \
+                  echo "Done.";
