@@ -26,6 +26,7 @@ jobs:
                   docker compose down && \
                   docker image rm -f codebase_development:latest && \
                   docker volume rm -f client_codebase_development && \
+                  docker network rm -f client_default && \
                   echo "Cleaned." && \
                   docker compose build && \
                   docker compose up -d && \
