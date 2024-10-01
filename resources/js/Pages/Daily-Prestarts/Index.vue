@@ -257,25 +257,45 @@
                         </div>
 
                         <div v-if="isWorkdateTodayOrFuture(prestart.workdate)">
-                          <MenuItem v-slot="{ active }">
-                            <a
-                              :href="`/daily-prestarts/${prestart.id}/sign-sheet-template`"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              class="group flex w-full items-center text-sm"
+                           <MenuItem v-slot="{ active }">
+                          <a
+                            :href="`/daily-prestarts/${prestart.id}/sign-sheet-template/signin`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex w-full items-left text-sm"
+                          >
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 px-4 py-2 text-gray-700 text-left'
+                                  : 'text-gray-900 px-4 py-2 text-left',
+                                'w-full',
+                              ]"
                             >
-                              <button
-                                :class="[
-                                  active
-                                    ? 'bg-gray-100 px-4 py-2 text-gray-700'
-                                    : 'text-gray-900 px-4 py-2',
-                                  'w-full',
-                                ]"
-                              >
-                                Download sign sheet template
-                              </button>
-                            </a>
-                          </MenuItem>
+                              Download Sign-in Sheet Template
+                            </button>
+                          </a>
+                        </MenuItem>
+
+                        <MenuItem v-slot="{ active }">
+                          <a
+                            :href="`/daily-prestarts/${prestart.id}/sign-sheet-template/signout`"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="group flex w-full items-left text-sm"
+                          >
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 px-4 py-2 text-gray-700 text-left'
+                                  : 'text-gray-900 px-4 py-2 text-left',
+                                'w-full',
+                              ]"
+                            >
+                              Download Sign-out Sheet Template
+                            </button>
+                          </a>
+                        </MenuItem>
                         </div>
                         <MenuItem v-slot="{ active }">
                           <a
