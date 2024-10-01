@@ -19,7 +19,7 @@ jobs:
           host: 3.107.83.246
           username: ubuntu
           key: ${{ secrets.SERVER2_PRIVATE_KEY }}
-          passphrase: password # If your private key has a passphrase, otherwise leave it out
+          
           port: 22
           script: |
             cd /var/www/superiorapp/
