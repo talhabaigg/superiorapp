@@ -270,16 +270,27 @@ $prestarts->getCollection()->transform(function ($prestart) {
         return $workdays; // Return the array directly
     }
 
-    public function signsheetTemplate(Prestart $prestart)
+    public function signsheetTemplate($id, $sign)
     {
+        // Debug the passed parameters
+     
+    
+        // Find the Prestart by the ID
+        $prestart = Prestart::findOrFail($id);
+    
         // Load related data
         $prestart->load(['project', 'project.users']);
-
+    
         // Format the workdate
         $formattedDate = DateFormatHelper::formatDate($prestart->workdate);
+    
         // Generate PDF
-        $pdf = Pdf::loadView('prestartpdf.signsheetpdftemplate', ['prestart' => $prestart, 'formattedDate' => $formattedDate]);
-
+        $pdf = Pdf::loadView('prestartpdf.signsheetpdftemplate', [
+            'prestart' => $prestart, 
+            'formattedDate' => $formattedDate, 
+            'type' => $sign // Use the sign parameter from the route
+        ]);
+    
         // Download PDF with a unique filename
         return $pdf->stream('prestart_' . $prestart->id . '.pdf');
     }

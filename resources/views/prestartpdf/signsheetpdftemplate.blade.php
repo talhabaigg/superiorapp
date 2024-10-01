@@ -3,6 +3,9 @@
 <head>
     <title>Sign Sheet Template</title>
     <style>
+        .pagenum:before {
+        content: counter(page);
+    }
         body {
             margin-top: 50px; /* Leave space for the header */
             font-family: 'Arial', sans-serif;
@@ -55,9 +58,10 @@
 <body>
     
     <header>
+        
         <img src="{{ public_path('logo1.jpg') }}" alt="Logo" class="logo">
         <div class="line"></div>
-        <h1>Daily Pre-start</h1>
+        <h1>Daily Pre-start - Page: <span class="pagenum"></span></h1>
         <table>
             <tr>
                 <th class="headertd">Project Name</th>
@@ -76,7 +80,9 @@
                     <th></th>
                     <th>Signed by</th>
                     <th>Time</th>
+                    @if ($type === 'signin')
                     <th>Location</th>
+                        @endif
                     <th>Signature</th>
                 </tr>
             </thead>
@@ -91,7 +97,9 @@
                     <tr>
                         <td>{{ $index++ }}</td>
                         <td>{{ $user['name'] }}</td>
-                        <td></td>
+                        @if ($type === 'signin')
+                            <td></td>
+                        @endif
                         <td></td>
                         <td></td>
                     </tr>
@@ -101,7 +109,9 @@
                     <tr>
                         <td>{{ $index++ }}</td>
                         <td></td>
-                        <td></td>
+                        @if ($type === 'signin')
+                            <td></td>
+                        @endif
                         <td></td>
                         <td></td>
                     </tr>
