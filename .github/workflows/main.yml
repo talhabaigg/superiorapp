@@ -18,7 +18,7 @@ jobs:
         with:
           host: 3.107.83.246
           username: ubuntu
-          key: ${{ secrets.SERVER2_PRIVATE_KEY }}
+          key: ${{ secrets.SERVER_PRIVATE_KEY }}
           
           port: 22
           script: |
