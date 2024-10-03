@@ -4,28 +4,24 @@ on:
       - Toolbox
 
 jobs:
-    cd:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: appleboy/ssh-action@v1.0.3
-              with:
-                allenvs: true
-                command_timeout: 960m
-                host: 3.107.83.246
-                port: 22
-                username: ubuntu
-                key: ${{ secrets.SSH_SECRET_KEY }}
-                script: |
-                  cd /var/www/codebase/ && \
-                  ls -l server/ && \
-                  ls -l client/ && \
-                  cd client/codebase_development && \
-                  git pull && \
-                  docker compose down && \
-                  docker image rm -f codebase_development:latest && \
-                  docker volume rm -f client_codebase_development && \
-                  docker network rm -f client_default && \
-                  echo "Cleaned." && \
-                  docker compose build && \
-                  docker compose up -d && \
-                  echo "Done.";
+  deploy:  # Job name should not be "cd" as it's not descriptive
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2  # Optional descriptive name for the step
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          allenvs: true
+          command_timeout: 960m
+          host: 3.107.83.246
+          port: 22
+          username: ubuntu
+          key: ${{ secrets.SSH_SECRET_KEY }}
+          script: |
+            cd /var/www/superiorapp/
+            git pull origin main
+            php artisan cache:clear
+            php artisan migrate --force
+            npm install
+            npm run build
+            echo "Deployment complete."
+            echo "Done."
