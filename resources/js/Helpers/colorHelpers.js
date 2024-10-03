@@ -12,6 +12,6 @@ export const getColorByEmployeeType  = (employeeType) => {
       // Add more employee types and their corresponding colors here
     };
   
-    return colors[employeeType] || "transparent"; // Default color if type not found
+    return colors[employeeType] || "pink"; // Default color if type not found
   };
   

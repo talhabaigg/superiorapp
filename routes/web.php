@@ -77,6 +77,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('daily-prestarts', PrestartController::class);
     Route::get('daily-prestarts/{prestart}/duplicate', [PrestartController::class, 'duplicate'])->name('daily-prestarts.duplicate');
     Route::get('/daily-prestarts/{id}/sign-sheet-template/{sign}', [PrestartController::class, 'signsheetTemplate'])->name('daily-prestarts.signsheet-template');
+
     Route::get('/daily-prestarts/{prestart}/pdf', [PrestartController::class, 'prestartPdf'])->name('daily-prestarts.pdf');
 
     Route::get('/daily-prestart-signed/{prestart}/file', [PrestartController::class, 'uploadSignedPagesPDF'])->name('daily-prestart-signed.uploadpdf');

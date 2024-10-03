@@ -17,7 +17,8 @@ use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Helpers\WorkdatesHelper;
 use App\Helpers\DateFormatHelper;
-
+use Illuminate\Support\Facades\Auth;
+use Spatie\Permission\Exceptions\UnauthorizedException;
 class PrestartController extends Controller
 {
     /**
@@ -74,20 +75,28 @@ $prestarts->getCollection()->transform(function ($prestart) {
      * Show the form for creating a new resource.
      */
     public function create()
-    {
-        
+{
+    // Get the authenticated user
+    $user = Auth::user();
+    
+    // Check if the user has the permission
+    if (!$user->can('Create daily pre-start')) {
+        // If the user does not have the permission, you can redirect or throw an exception
+        abort(403, 'You do not have permission to create a daily prestart.');
+    }
+
     // Fetch all projects where 'completed' is 0
     $projects_completed = Project::where('completed', 1)->get();
     $projects_active = Project::where('completed', 0)->get();
-    $foremen = User::where('employee_type', 'Foreman' )->get();
+    $foremen = User::where('employee_type', 'Foreman')->get();
     
     // Pass the projects to the Inertia view
     return Inertia::render('Daily-Prestarts/Create', [
         'projects_completed' => $projects_completed,
         'projects_active' => $projects_active,
-        'foremen' => $foremen
+        'foremen' => $foremen,
     ]);
-    }
+}
 
     /**
      * Store a newly created resource in storage.

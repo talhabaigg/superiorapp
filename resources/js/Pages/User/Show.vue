@@ -11,7 +11,7 @@
               <Breadcrumb :crumbs="crumbspage" />
             </div>
           </div>
-          <Link href="/profile" class="mx-2">
+          <Link :href="route('users.edit', user.id)" class="mx-2">
             <PrimaryButton>Edit</PrimaryButton>
           </Link>
         </nav>
@@ -97,10 +97,13 @@
                     <dt class="text-xs font-medium uppercase text-gray-400">
                       Permissions
                     </dt>
+
                     <dd class="text-md mt-1 text-gray-900">
                       <span
+                        v-for="permission in permissions"
+                        :key="permission.id"
                         class="bg-gray-100 text-gray-900 inline-flex items-center rounded-md px-1.5 py-0.5 text-xs font-medium mb-1 mr-1"
-                        >-</span
+                        >{{ permission }}</span
                       >
                     </dd>
                   </div>
@@ -212,6 +215,9 @@ const props = defineProps({
   },
   today: {
     type: String,
+  },
+  permissions: {
+    type: Object,
   },
 });
 defineExpose({

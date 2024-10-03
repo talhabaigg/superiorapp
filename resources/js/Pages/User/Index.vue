@@ -110,6 +110,16 @@
               >
                 Mobile
               </th>
+              <th
+                scope="col"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+              >
+                Roles and permissions
+              </th>
+              <th
+                scope="col"
+                class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900 md:table-cell"
+              ></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200 bg-white">
@@ -184,6 +194,85 @@
                   {{ user.phone_number }}
                 </a>
               </td>
+              <td></td>
+              <td class="relative">
+                <div class="relative w-8 h-8">
+                  <Menu as="div" class="relative inline-block text-left">
+                    <MenuButton
+                      type="button"
+                      class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <circle cx="12" cy="5" r="2" fill="currentColor" />
+                        <circle cx="12" cy="12" r="2" fill="currentColor" />
+                        <circle cx="12" cy="19" r="2" fill="currentColor" />
+                      </svg>
+                    </MenuButton>
+                    <transition
+                      enter-active-class="transition duration-100 ease-out"
+                      enter-from-class="transform scale-95 opacity-0"
+                      enter-to-class="transform scale-100 opacity-100"
+                      leave-active-class="transition duration-75 ease-in"
+                      leave-from-class="transform scale-100 opacity-100"
+                      leave-to-class="transform scale-95 opacity-0"
+                    >
+                      <MenuItems
+                        class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                        style="position: absolute; z-index: 9999"
+                      >
+                        <div>
+                          <MenuItem v-slot="{ active }">
+                            <Link :href="`/users/${user.id}`">
+                              <button
+                                :class="[
+                                  active
+                                    ? 'bg-gray-100 text-gray-700'
+                                    : 'text-gray-900',
+                                  'group flex w-full items-center px-4 py-2 text-sm',
+                                ]"
+                              >
+                                View
+                              </button>
+                            </Link>
+                          </MenuItem>
+                          <MenuItem v-slot="{ active }">
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 text-red-600'
+                                  : 'text-red-600',
+                                'group flex w-full items-center px-4 py-2 text-sm',
+                              ]"
+                              @click="deleteProject(project.id)"
+                            >
+                              Delete
+                            </button>
+                          </MenuItem>
+                          <MenuItem v-slot="{ active }">
+                            <button
+                              :class="[
+                                active
+                                  ? 'bg-gray-100 text-red-600'
+                                  : 'text-red-600',
+                                'group flex w-full items-center px-4 py-2 text-sm',
+                              ]"
+                              @click="deleteProject(project.id)"
+                            >
+                              Send password reset link
+                            </button>
+                          </MenuItem>
+                        </div>
+                      </MenuItems>
+                    </transition>
+                  </Menu>
+                </div>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -230,6 +319,7 @@ import Avatar from "vue-avatar-3";
 import { directive as vTippy } from "vue-tippy";
 import "tippy.js/themes/light-border.css";
 import "tippy.js/animations/shift-away.css";
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 // Define props
 const props = defineProps({
   users: {

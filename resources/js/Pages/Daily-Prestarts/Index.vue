@@ -11,6 +11,7 @@
               <Breadcrumb :crumbs="crumbspage" />
             </div>
           </div>
+
           <Link :href="route('daily-prestarts.create')">
             <PrimaryButton>Create Daily Pre-Start</PrimaryButton>
           </Link>
@@ -144,10 +145,19 @@
                   <div class="hidden md:flex -space-x-2">
                     <!-- Filter prestartSigned to include only "Present" statuses -->
                     <div
-                      v-for="user in prestart.prestartSigned"
+                      v-for="user in prestart.prestartSigned.slice(0, 5)"
                       :key="user.user.id"
                     >
                       <Avatar
+                        v-tippy="{
+                          content: user.name,
+                          delay: [100, 200],
+                          inertia: true,
+                          placement: 'top',
+                          arrow: false,
+                          theme: 'light-border',
+                          animation: 'shift-away',
+                        }"
                         :name="user.user.name"
                         :title="user.user.name"
                         :bgColor="
@@ -155,6 +165,15 @@
                         "
                         size="36px"
                       />
+                    </div>
+                    <div v-if="prestart.prestartSigned.length > 5">
+                      <Link
+                        :href="route('users.index')"
+                        class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-gray-100 text-gray-900 hover:bg-gray-200 hover:text-gray-900 focus:ring-gray-200 border border-gray-400 font-medium shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2"
+                        style="z-index: 10"
+                      >
+                        +{{ prestart.prestartSigned.length - 5 }}
+                      </Link>
                     </div>
                   </div>
                 </div>
@@ -167,10 +186,19 @@
                     <!-- Filter prestartSigned to include only "Present" statuses -->
                     <!-- <UserAvatars :users="prestart.prestartAbsent" :limit="5" /> -->
                     <div
-                      v-for="user in prestart.prestartAbsent"
+                      v-for="user in prestart.prestartAbsent.slice(0, 5)"
                       :key="user.user.id"
                     >
                       <Avatar
+                        v-tippy="{
+                          content: user.name,
+                          delay: [100, 200],
+                          inertia: true,
+                          placement: 'top',
+                          arrow: false,
+                          theme: 'light-border',
+                          animation: 'shift-away',
+                        }"
                         :name="user.user.name"
                         :title="user.user.name"
                         :bgColor="
@@ -186,6 +214,7 @@
                       /> -->
                     </div>
                   </div>
+
                   <div v-if="prestart.prestartAbsent.length > 0">
                     <span
                       ><Link
@@ -422,6 +451,10 @@ import { Inertia } from "@inertiajs/inertia";
 import { getColorByEmployeeType } from "@/Helpers/colorHelpers";
 // import Avatar from "vue3-avatar";
 import Avatar from "vue-avatar-3";
+import { directive as vTippy } from "vue-tippy";
+import "tippy.js/themes/light-border.css";
+import "tippy.js/animations/shift-away.css";
+
 const props = defineProps({
   workdays: Object,
   projects_completed: Object,
