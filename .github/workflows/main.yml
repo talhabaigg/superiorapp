@@ -3,7 +3,7 @@ name: CI Deployment to EC2
 on:
   push:
     branches:
-      - main
+      - Toolbox
 
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
         with:
           host: 3.107.83.246
           username: ubuntu
-          key: ${{ secrets.SSH4_SECRET_KEY }}
+          key: ${{ secrets.SSH_SECRET_KEY }}
           
           port: 22
           script: |
