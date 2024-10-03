@@ -1,31 +1,31 @@
-name: CI Deployment to EC2
-
 on:
   push:
     branches:
       - Toolbox
 
 jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: SSH and Deploy
-        uses: appleboy/ssh-action@v0.1.3
-        with:
-          host: 3.107.83.246
-          username: ubuntu
-          key: ${{ secrets.SSH_SECRET_KEY }}
-          
-          port: 22
-          script: |
-            cd /var/www/superiorapp/
-            git pull origin main
-            php artisan cache:clear
-            php artisan migrate --force
-            npm install
-            npm run build
-            echo "Deployment complete."
+    cd:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: appleboy/ssh-action@v1.0.3
+              with:
+                allenvs: true
+                command_timeout: 960m
+                host: 3.107.83.246
+                port: 22
+                username: ubuntu
+                key: ${{ secrets.SSH_PRIVATE_KEY }}
+                script: |
+                  cd /var/www/codebase/ && \
+                  ls -l server/ && \
+                  ls -l client/ && \
+                  cd client/codebase_development && \
+                  git pull && \
+                  docker compose down && \
+                  docker image rm -f codebase_development:latest && \
+                  docker volume rm -f client_codebase_development && \
+                  docker network rm -f client_default && \
+                  echo "Cleaned." && \
+                  docker compose build && \
+                  docker compose up -d && \
+                  echo "Done.";
