@@ -18,10 +18,10 @@ jobs:
           key: ${{ secrets.SSH_SECRET_KEY }}
           script: |
             cd /var/www/superiorapp/
-            git pull origin main
+            sudo git pull origin main
             php artisan cache:clear
             php artisan migrate --force
-            npm install
-            npm run build
+            sudo npm install
+            sudo npm run build
             echo "Deployment complete."
             echo "Done."
