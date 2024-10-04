@@ -62,9 +62,7 @@
         </div>
       </div>
 
-      <div
-        class="mt-2 relative overflow-x-scroll mx-auto rounded-lg sm:block overflow-y-auto border shadow-md"
-      >
+      <div class="mt-2 relative mx-auto rounded-lg sm:block border shadow-md">
         <table
           class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400"
         >
@@ -262,7 +260,7 @@
                                   : 'text-red-600',
                                 'group flex w-full items-center px-4 py-2 text-sm',
                               ]"
-                              @click="deleteProject(project.id)"
+                              @click="sendPasswordReset(user.email)"
                             >
                               Send password reset link
                             </button>
@@ -308,6 +306,7 @@
   
   <script setup>
 import { ref, watch, computed } from "vue";
+import { useForm } from "@inertiajs/inertia-vue3";
 import { Link, usePage, router } from "@inertiajs/vue3";
 import Pagination from "@/Components/Pagination.vue";
 import PrimaryButton from "@/Components/PrimaryButton.vue";
@@ -320,6 +319,7 @@ import { directive as vTippy } from "vue-tippy";
 import "tippy.js/themes/light-border.css";
 import "tippy.js/animations/shift-away.css";
 import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
+import { Inertia } from "@inertiajs/inertia";
 // Define props
 const props = defineProps({
   users: {
@@ -364,6 +364,21 @@ const resetFields = () => {
   searchQuery.value = "";
   selectedEmployeeType.value = "";
   selectedStatusType.value = "";
+};
+
+// Create a form instance using useForm
+const form = useForm({
+  email: "",
+});
+
+// Submit function to send password reset request
+const submit = () => {
+  form.post(route("password.email"));
+};
+
+const sendPasswordReset = (email) => {
+  form.email = email; // Set the email to the form
+  submit(); // Call submit to send the request
 };
 </script>
   

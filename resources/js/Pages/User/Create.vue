@@ -209,7 +209,7 @@
           <div class="flex flex-wrap gap-2 mt-2">
             <template v-for="(project, index) in selectedProjects" :key="index">
               <div
-                class="flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 hover:bg-blue-900 rounded-full cursor-pointer"
+                class="flex items-center px-2 py-1 text-xs bg-blue-100 text-blue-700 hover:bg-blue-200 rounded-full cursor-pointer"
                 @click="removeProject(project)"
               >
                 <span class="mr-2">{{ project.project_name }}</span>
@@ -241,7 +241,7 @@
                 v-for="project in projects"
                 :key="project"
                 @click="toggleProject(project)"
-                class="block p-1 hover:bg-blue-700 hover:text-red cursor-pointer"
+                class="block p-1 hover:bg-gray-200 cursor-pointer"
               >
                 {{ project.project_name }}
               </li>
@@ -260,116 +260,23 @@
             >Optional</span
           >
         </div>
-        <div class="flex items-center space-x-2 mb-4 mt-4">
+        <div
+          v-for="permission in permissions"
+          :key="permission.id"
+          class="flex items-center space-x-2 mb-4"
+        >
           <input
-            id="manageOtherUsersTimesheet"
+            :id="permission.id"
             type="checkbox"
+            v-model="form.userPermissions"
+            :value="permission.name"
             class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="manageOtherUsersTimesheet"
-            class="ml-2 block text-sm text-gray-900"
-            >Manage other users timesheet (View, create, edit and delete
-            timesheet. Assign and delete task times)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="approveTimesheet"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="approveTimesheet"
-            class="ml-2 block text-sm text-gray-900"
-            >Approve timesheet (View and approve timesheet)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="approveBonus"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label for="approveBonus" class="ml-2 block text-sm text-gray-900"
-            >Approve bonus</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="assignNightWorks"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="assignNightWorks"
-            class="ml-2 block text-sm text-gray-900"
-            >Assign night works in timesheets</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="manageAbsentees"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="manageAbsentees"
-            class="ml-2 block text-sm text-gray-900"
-            >Manage absentees on projects assigned</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="viewDailyPrestarts"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="viewDailyPrestarts"
-            class="ml-2 block text-sm text-gray-900"
-            >Daily pre-starts (View and print QR codes)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="manageDailyPrestarts"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="manageDailyPrestarts"
-            class="ml-2 block text-sm text-gray-900"
-            >Manage daily pre-starts (View, create, edit and print QR
-            codes)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="manageToolboxTalks"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="manageToolboxTalks"
-            class="ml-2 block text-sm text-gray-900"
-            >Manage toolbox talks (View, create, edit and print QR codes)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-4">
-          <input
-            id="manageQualityAssurance"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="manageQualityAssurance"
-            class="ml-2 block text-sm text-gray-900"
-            >Manage QA (View, create, edit and delete QA work)</label
-          >
-        </div>
-        <div class="flex items-center space-x-2 mb-8">
-          <input
-            id="viewMarkQualityAssuranceComplete"
-            type="checkbox"
-            class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-          /><label
-            for="viewMarkQualityAssuranceComplete"
-            class="ml-2 block text-sm text-gray-900"
-            >View and mark as complete QA
+          />
+          <label :for="permission.id" class="ml-2 block text-sm text-gray-900">
+            {{ permission.name }}
           </label>
         </div>
+
         <div class="flex">
           <button
             type="submit"
@@ -409,6 +316,9 @@ const props = defineProps({
   projects: {
     type: Array,
   },
+  permissions: {
+    type: Array,
+  },
 });
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
@@ -416,7 +326,7 @@ const crumbspage = ref([
 
   { label: "Create", href: "" },
 ]);
-
+const selectedProjects = ref([]);
 const form = useForm({
   name: "",
   email: "",
@@ -424,6 +334,8 @@ const form = useForm({
   phone_number: "",
   superior_id: "",
   greenline_id: "",
+  userPermissions: [],
+  selectedProjects: selectedProjects.value,
 });
 
 const submitForm = () => {
@@ -447,7 +359,6 @@ const submitForm = () => {
 // ];
 
 // Reactive array to track selected projects
-const selectedProjects = ref([]);
 
 // Function to toggle project selection
 const toggleProject = (project) => {
@@ -458,6 +369,7 @@ const toggleProject = (project) => {
   } else {
     selectedProjects.value.push(project);
   }
+  form.selectedProjects = selectedProjects.value;
 };
 
 // Function to remove project when chip is clicked

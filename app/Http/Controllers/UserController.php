@@ -62,7 +62,8 @@ class UserController extends Controller
     {
         $employee_types = Employeetype::all();
         $projects = Project::all();
-        return inertia('User/Create',['employee_types' => $employee_types, 'projects'=> $projects]);
+        $permissions = Permission::all();
+        return inertia('User/Create',['employee_types' => $employee_types, 'projects'=> $projects, 'permissions' => $permissions]);
     }
 
     /**
@@ -72,11 +73,15 @@ class UserController extends Controller
 {
     $validatedData = $request->validate([
         'name' => 'required|string|max:255',
-        'phone_number' => 'required|string|max:15', // Customize as needed
-        'email' => 'required|email|unique:users,email', // Ensure email is unique
-        'employee_type' => 'required|string', // Adjust as necessary (string, enum, etc.)
-        'superior_id' => 'nullable', // Ensure it's a valid user ID if provided
-        'greeline_id' => 'nullable|string|max:255', // Optional field, adjust max length as needed
+        'phone_number' => 'required|string|max:15',
+        'email' => 'required|email|unique:users,email',
+        'employee_type' => 'required|string',
+        'superior_id' => 'nullable',
+        'greeline_id' => 'nullable|string|max:255',
+        'userPermissions' => 'array',
+        'userPermissions.*' => 'exists:permissions,name',
+        'selectedProjects' => 'required',
+         // Validate the id property of each project
     ]);
 
     // Auto-generate a password
@@ -93,10 +98,34 @@ class UserController extends Controller
         'password' => Hash::make($generatedPassword), // Hash the generated password
     ]);
 
+    // If permissions are provided, assign them
+    if ($request->has('userPermissions')) {
+        $user->syncPermissions($request->input('userPermissions')); // Sync with the array of permissions
+    }
+   
+    if ($request->has('selectedProjects')) {
+        $projectIds = collect($request->input('selectedProjects'))->pluck('id')->toArray(); // Extract project IDs
+        $failedProjects = []; // Array to keep track of failed project attachments
+      
+        try {
+            // Sync the user with projects
+            $user->projects()->sync($projectIds); // Attach user to all projects
+
+        } catch (\Exception $e) {
+            // Log the exception or handle as needed
+            foreach ($projectIds as $projectId) {
+                $projectInstance = Project::find($projectId);
+                if (!$projectInstance) {
+                    $failedProjects[] = $projectId; // Store failed project IDs
+                }
+            }
+        }
+    }
+
     // Optionally, return the generated password if you need to send it to the user
-    // This is just an example; typically you'd send this via email or other means
-    return redirect()->route('users.index')->with('success', 'user has been added');
+    return redirect()->route('users.index')->with('success', 'User has been added');
 }
+
 
     /**
      * Display the specified resource.

@@ -11,9 +11,64 @@
               <Breadcrumb :crumbs="crumbspage" />
             </div>
           </div>
-          <Link :href="route('users.edit', user.id)" class="mx-2">
-            <PrimaryButton>Edit</PrimaryButton>
-          </Link>
+
+          <div class="flex items-center justify-between">
+            <Link :href="route('users.edit', user.id)" class="mx-2">
+              <PrimaryButton>Edit</PrimaryButton>
+            </Link>
+            <!-- <button @click="exportToCSV" class="btn btn-primary">
+              Export to CSV
+            </button> -->
+            <div class="w-8 h-8">
+              <Menu as="div" class="relative inline-block text-left">
+                <MenuButton
+                  type="button"
+                  class="w-8 h-8 rounded-full flex items-center justify-center hover:bg-gray-200"
+                >
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <circle cx="12" cy="5" r="2" fill="currentColor" />
+                    <circle cx="12" cy="12" r="2" fill="currentColor" />
+                    <circle cx="12" cy="19" r="2" fill="currentColor" />
+                  </svg>
+                </MenuButton>
+                <transition
+                  enter-active-class="transition duration-100 ease-out"
+                  enter-from-class="transform scale-95 opacity-0"
+                  enter-to-class="transform scale-100 opacity-100"
+                  leave-active-class="transition duration-75 ease-in"
+                  leave-from-class="transform scale-100 opacity-100"
+                  leave-to-class="transform scale-95 opacity-0"
+                >
+                  <MenuItems
+                    class="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-lg bg-white shadow-lg ring-1 ring-black/5 focus:outline-none"
+                  >
+                    <div>
+                      <MenuItem v-slot="{ active }">
+                        <Link :href="`/profile`">
+                          <button
+                            :class="[
+                              active
+                                ? 'bg-gray-100 text-gray-700'
+                                : 'text-gray-900',
+                              'group flex w-full items-center px-4 py-2 text-sm',
+                            ]"
+                          >
+                            Change your own password
+                          </button></Link
+                        >
+                      </MenuItem>
+                    </div>
+                  </MenuItems>
+                </transition>
+              </Menu>
+            </div>
+          </div>
         </nav>
       </div>
     </header>
@@ -207,7 +262,7 @@ import { directive as vTippy } from "vue-tippy";
 import "tippy.js/themes/light-border.css";
 import "tippy.js/animations/shift-away.css";
 // import Tooltip from "@/Components/Tooltip.vue";
-
+import { Menu, MenuButton, MenuItems, MenuItem } from "@headlessui/vue";
 const props = defineProps({
   user: {
     type: Object,
