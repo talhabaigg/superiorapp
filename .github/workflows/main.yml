@@ -18,7 +18,10 @@ jobs:
           key: ${{ secrets.SSH_SECRET_KEY }}
           script: |
             cd /var/www/superiorapp/
+            
             sudo git pull origin main
+            
+            sudo rm -rf public/build/assets
             php artisan cache:clear
             php artisan migrate --force
             sudo npm install
