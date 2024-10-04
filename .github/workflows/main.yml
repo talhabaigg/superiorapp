@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - Toolbox
+
+jobs:
+  deploy:  # Job name should not be "cd" as it's not descriptive
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to EC2  # Optional descriptive name for the step
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          allenvs: true
+          command_timeout: 960m
+          host: 3.107.83.246
+          port: 22
+          username: ubuntu
+          key: ${{ secrets.SSH_SECRET_KEY }}
+          script: |
+            cd /var/www/superiorapp/
+            sudo git pull origin main
+            php artisan cache:clear
+            php artisan migrate --force
+            sudo npm install
+            sudo npm run build
+            echo "Deployment complete."
+            echo "Done."
