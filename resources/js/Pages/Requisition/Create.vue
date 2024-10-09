@@ -85,7 +85,7 @@
     <div class="px-8">
       <div class="px-4 py-2 sm:px-6 md:px-8">
         <form
-          class="mx-auto mt-8 max-w-lg md:max-w-3xl p-4 shadow-md rounded-2xl"
+          class="mx-auto mt-8 max-w-lg md:max-w-3xl"
           @submit.prevent="submitForm"
         >
           <div class="grid grid-cols-1 md:gap-1 gap-2 md:grid-cols-2">
@@ -480,7 +480,9 @@
               Line
             </button>
           </div>
-          <div class="mt-2"><PrimaryButton>Submit</PrimaryButton></div>
+          <div class="mt-2 justify-between">
+            <PrimaryButton>Submit</PrimaryButton>
+          </div>
         </form>
       </div>
     </div>
@@ -501,6 +503,7 @@ import Avatar from "vue-avatar-3";
 import { directive as vTippy } from "vue-tippy";
 import "tippy.js/themes/light-border.css";
 import "tippy.js/animations/shift-away.css";
+
 import {
   Combobox,
   ComboboxInput,
@@ -509,6 +512,7 @@ import {
   ComboboxOption,
   TransitionRoot,
 } from "@headlessui/vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
 
 const crumbspage = ref([
   { label: "Home", href: "/dashboard" },
