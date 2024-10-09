@@ -1,22 +1,24 @@
 <?php
 
-use App\Http\Controllers\AbsentController;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Application;
+use App\Http\Controllers\PageController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AbsentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\CostcodeController;
 use App\Http\Controllers\PrestartController;
 use App\Http\Controllers\TimesheetController;
 use App\Http\Controllers\ProjectUserController;
+use App\Http\Controllers\RequisitionController;
 use App\Http\Controllers\BuildingTaskController;
-use App\Http\Controllers\CostcodeController;
 use App\Http\Controllers\EmployeetypeController;
 use App\Http\Controllers\LabourbudgetController;
+use App\Http\Controllers\MaterialItemController;
 use App\Http\Controllers\PrestartSignedController;
-use App\Http\Controllers\PageController;
 
 // Public routes
 Route::get('/', function () {
@@ -100,7 +102,11 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/labour-budgets', [LabourbudgetController::class, 'index'])->name('labour-budgets.index');
 
-   
+    Route::resource('material-items', MaterialItemController::class);
+    Route::get('/materialitems/upload', [MaterialItemController::class, 'showUploadForm'])->name('material-items.upload');
+    Route::post('/material-items/import', [MaterialItemController::class, 'import'])->name('material-items.import');
+
+    Route::get('requisition/create', [RequisitionController::class, 'create'])->name('requisition.create');
 
 });
 
