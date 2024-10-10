@@ -107,6 +107,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/material-items/import', [MaterialItemController::class, 'import'])->name('material-items.import');
 
     Route::get('requisition/create', [RequisitionController::class, 'create'])->name('requisition.create');
+    Route::post('requisition/store', [RequisitionController::class, 'printPdf'])->name('requisition.store');
 
 });
 

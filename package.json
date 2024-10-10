@@ -27,6 +27,7 @@
         "dayjs": "^1.11.11",
         "floating-vue": "^5.2.2",
         "laravel-permission-to-vuejs": "^3.0.8",
+        "pdf-vue3": "^1.0.12",
         "tippy.js": "^6.3.7",
         "tippy.vue": "^3.2.1",
         "vue-avatar-3": "^0.3.1",

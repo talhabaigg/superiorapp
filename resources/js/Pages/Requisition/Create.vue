@@ -100,6 +100,7 @@
                   class="block w-full rounded-md border-gray-300 shadow-sm placeholder:text-gray-300 focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 sm:text-sm"
                   autocomplete="off"
                   type="date"
+                  v-model="form.date_required"
                 />
               </div>
             </div>
@@ -136,6 +137,7 @@
               </div>
               <div id="name" class="mt-1">
                 <select
+                  v-model="form.project_id"
                   class="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-blue-500 focus:outline-none focus:ring-blue-500 sm:text-sm"
                 >
                   <option value="">Search by project</option>
@@ -175,6 +177,7 @@
                   autocomplete="off"
                   required
                   type="text"
+                  v-model="form.site_ref"
                 />
               </div>
             </div>
@@ -191,6 +194,7 @@
                   autocomplete="off"
                   required
                   type="text"
+                  v-model="form.delivery_contact"
                 />
               </div>
             </div>
@@ -207,6 +211,7 @@
                   autocomplete="off"
                   required
                   type="text"
+                  v-model="form.pickup_by"
                 />
               </div>
             </div>
@@ -223,6 +228,7 @@
                   autocomplete="off"
                   required
                   type="text"
+                  v-model="form.requested_by"
                 />
               </div>
             </div>
@@ -239,6 +245,7 @@
                   autocomplete="off"
                   required
                   type="text"
+                  v-model="form.delivery_to"
                 />
               </div>
             </div>
@@ -253,6 +260,7 @@
                 <textarea
                   class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2 focus:border-blue-500 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
                   rows="3"
+                  v-model="form.notes"
                 ></textarea>
               </div>
             </div>
@@ -293,10 +301,6 @@
                           class="absolute inset-y-0 right-0 flex items-center pr-2"
                           @onclick="populateFields(line, index)"
                         >
-                          <ChevronUpDownIcon
-                            class="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
                         </ComboboxButton>
                       </div>
                       <TransitionRoot
@@ -359,10 +363,6 @@
                           class="absolute inset-y-0 right-0 flex items-center pr-2"
                           @onclick="populateFields(line, index)"
                         >
-                          <ChevronUpDownIcon
-                            class="h-5 w-5 text-gray-400"
-                            aria-hidden="true"
-                          />
                         </ComboboxButton>
                       </div>
                       <TransitionRoot
@@ -503,6 +503,7 @@ import Avatar from "vue-avatar-3";
 import { directive as vTippy } from "vue-tippy";
 import "tippy.js/themes/light-border.css";
 import "tippy.js/animations/shift-away.css";
+import { useForm } from "@inertiajs/vue3";
 
 import {
   Combobox,
@@ -525,7 +526,7 @@ const props = defineProps({
     type: Object,
   },
   suppliers: {
-    type: Array,
+    type: Object,
   },
   projects_completed: Object,
   projects_active: Object,
@@ -538,13 +539,17 @@ const addline = () => {
     qty: "",
     cost: "",
   });
+  console.log(form);
 };
+
 const removeline = () => {
   lineItems.value.splice(lineItems.value.length - 1, 1);
 };
 // Function to populate fields based on the selected item from the search
 const populateFields = (line, index) => {
   if (line.selectedItem) {
+    console.log(line.selectedItem);
+    line.item_code = line.selectedItem.code;
     line.description = line.selectedItem.description;
     line.qty = line.selectedItem.qty;
     line.cost = line.selectedItem.cost;
@@ -573,4 +578,27 @@ const selectedSupplier = ref("");
 const isComboBoxDisabled = computed(() => {
   return !selectedSupplier.value; // Disable if no supplier is selected
 });
+const form = useForm({
+  date_required: "",
+  supplier: computed(() => selectedSupplier.value),
+  project_id: "",
+  site_ref: "",
+  delivery_contact: "",
+  pickup_by: "",
+  requested_by: "",
+  delivery_to: "",
+  notes: "",
+  req_lines: computed(() => lineItems.value), // req_lines is computed from lineItems
+});
+
+const submitForm = () => {
+  form.post("/requisition/store", {
+    onSuccess: () => {
+      console.log("Timesheet saved successfully");
+    },
+    onError: (errors) => {
+      console.error("Form submission errors:", errors);
+    },
+  });
+};
 </script>
